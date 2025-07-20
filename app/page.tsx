@@ -404,16 +404,7 @@ export default function HomePage() {
                     Adventure Tours
                   </Link>
                 </li>
-                <li>
-                  <Link href="/product" className="hover:text-white">
-                    Product
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/program" className="hover:text-white">
-                    Program
-                  </Link>
-                </li>
+               
               </ul>
             </div>
 
@@ -431,7 +422,7 @@ export default function HomePage() {
             <div className="flex flex-col items-center justify-start">
               <h4 className="font-semibold mb-4">Scan QR</h4>
               <Image
-                src="/images/qrcode.png"
+                src="/images/GIHOMARTS FINAL QR CODE[1].jpg"
                 alt="GiHomarts QR Code"
                 width={80}
                 height={80}
