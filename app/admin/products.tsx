@@ -61,8 +61,8 @@ export default function AdminProducts() {
   }
 
   // Clear error on input change
-  function handleInputChange(setter) {
-    return e => {
+  function handleInputChange(setter: (value: string) => void) {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
       setError("")
       setter(e.target.value)
     }
