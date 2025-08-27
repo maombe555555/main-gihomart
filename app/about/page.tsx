@@ -151,7 +151,7 @@ export default function AboutPage() {
             <Card className="text-center">
               <CardHeader>
                 <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
-                  <Image src="/images/team3.jpg" alt="Team Member 3" width={96} height={96} className="object-cover" />
+                  <Image src="/images/sales.png" alt="Team Member 3" width={96} height={96} className="object-cover" />
                 </div>
                 <CardTitle className="text-xl">MASENGESHO Emmanuel</CardTitle>
                 <CardDescription className="text-base"> Sales and Marketing Mananger</CardDescription>
