@@ -135,8 +135,8 @@ export default function AboutPage() {
                 <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                   <Image src="/images/team1.jpg" alt="Team Member 1" width={96} height={96} className="object-cover" />
                 </div>
-                <CardTitle className="text-xl">Jean Bosco Uwizeye</CardTitle>
-                <CardDescription className="text-base">Founder & CEO</CardDescription>
+                <CardTitle className="text-xl">KAJUGA Jerome</CardTitle>
+                <CardDescription className="text-base">Founder & Managing Director</CardDescription>
               </CardHeader>
             </Card>
             <Card className="text-center">
