@@ -188,17 +188,17 @@ export default function AboutPage() {
           </div>
           <div className="grid md:grid-cols-3 gap-6 text-center">
             <div>
-              <div className="text-4xl font-bold text-orange-600 mb-2">500+</div>
+              <div className="text-4xl font-bold text-orange-600 mb-2">600+</div>
               <p className="text-lg font-medium mb-2">Travelers Hosted</p>
               <p className="text-muted-foreground">From around the world</p>
             </div>
             <div>
-              <div className="text-4xl font-bold text-orange-600 mb-2">25+</div>
+              <div className="text-4xl font-bold text-orange-600 mb-2">500+</div>
               <p className="text-lg font-medium mb-2">Communities Supported</p>
               <p className="text-muted-foreground">Across Southern Province</p>
             </div>
             <div>
-              <div className="text-4xl font-bold text-orange-600 mb-2">100+</div>
+              <div className="text-4xl font-bold text-orange-600 mb-2">1000+</div>
               <p className="text-lg font-medium mb-2">Local Jobs Created</p>
               <p className="text-muted-foreground">Through tourism initiatives</p>
             </div>
