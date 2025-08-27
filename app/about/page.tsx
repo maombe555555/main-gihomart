@@ -144,8 +144,8 @@ export default function AboutPage() {
                 <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                   <Image src="/images/team2.jpg" alt="Team Member 2" width={96} height={96} className="object-cover" />
                 </div>
-                <CardTitle className="text-xl">Aline Mukamana</CardTitle>
-                <CardDescription className="text-base">Cultural Heritage Specialist</CardDescription>
+                <CardTitle className="text-xl">NIYOSENGA Aimable</CardTitle>
+                <CardDescription className="text-base">Tour Operation Manager</CardDescription>
               </CardHeader>
             </Card>
             <Card className="text-center">
@@ -153,8 +153,8 @@ export default function AboutPage() {
                 <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                   <Image src="/images/team3.jpg" alt="Team Member 3" width={96} height={96} className="object-cover" />
                 </div>
-                <CardTitle className="text-xl">Eric Nshimiyimana</CardTitle>
-                <CardDescription className="text-base">Tour Operations Manager</CardDescription>
+                <CardTitle className="text-xl">MASENGESHO Emmanuel</CardTitle>
+                <CardDescription className="text-base"> Sales and Marketing Mananger</CardDescription>
               </CardHeader>
             </Card>
             <Card className="text-center">
@@ -162,8 +162,17 @@ export default function AboutPage() {
                 <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                   <Image src="/images/team4.jpg" alt="Team Member 4" width={96} height={96} className="object-cover" />
                 </div>
-                <CardTitle className="text-xl">Grace Uwase</CardTitle>
-                <CardDescription className="text-base">Community Engagement Lead</CardDescription>
+                <CardTitle className="text-xl">NGENZI Cedrick</CardTitle>
+                <CardDescription className="text-base">Guide</CardDescription>
+              </CardHeader>
+            </Card>
+            <Card className="text-center">
+              <CardHeader>
+                <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                  <Image src="/images/team4.jpg" alt="Team Member 4" width={96} height={96} className="object-cover" />
+                </div>
+                <CardTitle className="text-xl">NIYIGENA Ernestine</CardTitle>
+                <CardDescription className="text-base">Guide</CardDescription>
               </CardHeader>
             </Card>
           </div>
