@@ -31,7 +31,7 @@ export default function DocumentationPage() {
       description:
         "Explore the unique architectural styles of traditional Rwandan homes, from the iconic thatched-roof houses to modern interpretations that preserve cultural elements. Learn about construction techniques, materials, and the cultural significance of different architectural features.",
       category: "Culture",
-      author: "Jean Baptiste Uwimana",
+      author: "Kajuga jerome",
       readTime: "8 min read",
       publishDate: "2024-12-15",
       image: "/images/inzu.jpg?height=200&width=300",
@@ -44,7 +44,7 @@ export default function DocumentationPage() {
       description:
         "Discover the intricate art of Agaseke basket weaving, a UNESCO-recognized cultural practice. This comprehensive guide covers the history, techniques, patterns, and cultural significance of these beautiful handwoven baskets that tell stories of Rwandan heritage.",
       category: "Crafts",
-      author: "Marie Claire Mukamana",
+      author: "Kajuga jerome",
       readTime: "12 min read",
       publishDate: "2024-12-10",
       image: "/images/agaseke.jpg?height=200&width=300",
@@ -57,7 +57,7 @@ export default function DocumentationPage() {
       description:
         "Journey through Rwanda's coffee culture, from the highland plantations to traditional brewing methods. Learn about the social aspects of coffee drinking, ceremonial preparations, and how coffee cultivation has shaped communities across the country.",
       category: "Food & Drink",
-      author: "Samuel Nzeyimana",
+      author: "Kajuga jerome",
       readTime: "10 min read",
       publishDate: "2024-12-08",
       image: "/images/coffee.jpg?height=200&width=300",
@@ -70,7 +70,7 @@ export default function DocumentationPage() {
       description:
         "Delve into the powerful world of Intore dance, the traditional warrior dance of Rwanda. Understand the historical context, symbolic movements, traditional instruments, and how these performances preserve stories of courage and unity.",
       category: "Arts",
-      author: "Esperance Nyirahabimana",
+      author: "Kajuga jerome",
       readTime: "15 min read",
       publishDate: "2024-12-05",
       image: "/images/intore.jpg?height=200&width=300",
@@ -83,7 +83,7 @@ export default function DocumentationPage() {
       description:
         "Learn about innovative sustainable tourism practices being implemented in rural Rwandan communities. This guide covers eco-friendly accommodations, community-based tourism models, and how visitors can minimize their environmental impact.",
       category: "Tourism",
-      author: "Patrick Habimana",
+      author: "Kajuga jerome",
       readTime: "11 min read",
       publishDate: "2024-12-03",
       image: "/images/sustain.png?height=200&width=300",
@@ -96,7 +96,7 @@ export default function DocumentationPage() {
       description:
         "Explore the rich history of the Nyiginya Dynasty and the Kingdom of Rwanda. This comprehensive historical overview covers royal traditions, governance systems, cultural practices, and the lasting impact on modern Rwandan society.",
       category: "History",
-      author: "Dr. Agnes Mukamana",
+      author: "Kajuga jerome",
       readTime: "20 min read",
       publishDate: "2024-11-28",
       image: "/images/king.png?height=200&width=300",
@@ -109,7 +109,7 @@ export default function DocumentationPage() {
       description:
         "Discover the authentic flavors of traditional Rwandan cuisine. From ubugali and igikoma to ceremonial foods, learn about ingredients, cooking methods, and the cultural significance of sharing meals in Rwandan society.",
       category: "Food & Drink",
-      author: "Immaculee Uwimana",
+      author: "Kajuga jerome",
       readTime: "14 min read",
       publishDate: "2024-11-25",
       image: "/images/cousine.png?height=200&width=300",
@@ -122,7 +122,7 @@ export default function DocumentationPage() {
       description:
         "Explore the wisdom embedded in Rwandan proverbs and oral traditions. This collection includes popular sayings, their meanings, cultural context, and how these traditions continue to guide modern Rwandan life and values.",
       category: "Culture",
-      author: "Celestin Rwigema",
+      author: "Kajuga jerome",
       readTime: "9 min read",
       publishDate: "2024-11-22",
       image: "/images/proverbs.png?height=200&width=300",
@@ -135,7 +135,7 @@ export default function DocumentationPage() {
       description:
         "Learn how community-based tourism initiatives are transforming rural communities in Rwanda. This guide covers successful case studies, best practices, and the social and economic benefits of involving local communities in tourism development.",
       category: "Tourism",
-      author: "Grace Uwimana",
+      author: "Kajuga jerome",
       readTime: "13 min read",
       publishDate: "2024-11-20",
       image: "/images/community.png?height=200&width=300",
@@ -148,7 +148,7 @@ export default function DocumentationPage() {
       description:
         "Discover the traditional healing practices of Rwanda and the medicinal plants used by traditional healers. Learn about the cultural significance of these practices and their integration with modern healthcare approaches.",
       category: "Health",
-      author: "Dr. Vincent Nzeyimana",
+      author: "Kajuga jerome",
       readTime: "16 min read",
       publishDate: "2024-11-18",
       image: "/images/medecine.png?height=200&width=300",
