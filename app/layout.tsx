@@ -4,8 +4,8 @@ import { Facebook, Instagram, Twitter, MessageCircle } from "lucide-react"
 
 export const metadata: Metadata = {
   title: ' Gihomart.rw',
-  description: 'My heritage to day and tomorrow',
-  generator: 'Gihomart.rw',
+  description: 'My Heritage Today & Tomorrow',
+  generator: 'GihomArt.rw',
 }
 
 export default function RootLayout({
