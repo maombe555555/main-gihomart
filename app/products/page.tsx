@@ -52,18 +52,27 @@ export default function ProductsPage() {
     },
   ];
 
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState<any[]>([])
   useEffect(() => {
     fetch("/api/products")
-      .then(res => res.json())
+      .then(async (res) => {
+        if (!res.ok) return []
+        const data = await res.json()
+        return Array.isArray(data) ? data : []
+      })
       .then(setProducts)
       .catch(() => setProducts([]))
   }, [])
 
   // Filter out any DB products that duplicate the core services by name (case-insensitive)
-  const filteredProducts = products.filter(
-    (product: any) => !coreServices.some(service => service.name.toLowerCase() === product.name?.toLowerCase())
-  )
+  const filteredProducts = Array.isArray(products)
+    ? products.filter(
+        (product: any) =>
+          !coreServices.some(
+            (service) => service.name.toLowerCase() === product.name?.toLowerCase()
+          )
+      )
+    : []
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">

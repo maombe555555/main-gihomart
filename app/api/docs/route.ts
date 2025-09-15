@@ -4,6 +4,9 @@ import Documentation from "@/models/Documentation";
 
 // GET all docs
 export async function GET() {
+  if (!process.env.MONGODB_URI) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
+  }
   try {
     await dbConnect();
     const docs = await Documentation.find();
@@ -15,6 +18,9 @@ export async function GET() {
 
 // POST new doc
 export async function POST(req: NextRequest) {
+  if (!process.env.MONGODB_URI) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
+  }
   try {
     await dbConnect();
     const data = await req.json();
@@ -30,6 +36,9 @@ export async function POST(req: NextRequest) {
 
 // PUT update doc
 export async function PUT(req: NextRequest) {
+  if (!process.env.MONGODB_URI) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
+  }
   try {
     await dbConnect();
     const { _id, ...update } = await req.json();
@@ -48,6 +57,9 @@ export async function PUT(req: NextRequest) {
 
 // DELETE doc
 export async function DELETE(req: NextRequest) {
+  if (!process.env.MONGODB_URI) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
+  }
   try {
     await dbConnect();
     const { _id } = await req.json();
