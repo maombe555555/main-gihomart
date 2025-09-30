@@ -70,23 +70,65 @@ export default function BookingPage() {
   useEffect(() => {
     fetch("/api/products")
       .then(res => res.json())
-      .then(setProducts)
+      .then((data) => {
+        if (Array.isArray(data)) setProducts(data)
+        else setProducts([])
+      })
       .catch(() => setProducts([]))
     fetch("/api/programs")
       .then(res => res.json())
-      .then(setPrograms)
+      .then((data) => {
+        if (Array.isArray(data)) setPrograms(data)
+        else setPrograms([])
+      })
       .catch(() => setPrograms([]))
   }, [])
 
   // Filter out any DB products that duplicate the core services by name (case-insensitive)
-  const filteredProducts = products.filter(
-    (product: any) => !coreServices.some(service => service.name.toLowerCase() === product.name?.toLowerCase())
-  )
+  const filteredProducts = Array.isArray(products)
+    ? products.filter((product: any) =>
+        !coreServices.some(service => service.name.toLowerCase() === product.name?.toLowerCase())
+      )
+    : []
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Handle form submission
-    alert("Booking request submitted! We'll contact you within 24 hours.")
+    if (submitting) return
+    const form = e.currentTarget
+    const destination = (form.querySelector("[data-field='destination']") as HTMLElement | null)?.getAttribute("data-value") || ""
+    const travelers = (form.querySelector("[data-field='travelers']") as HTMLElement | null)?.getAttribute("data-value") || ""
+    const budget = (form.querySelector("[data-field='budget']") as HTMLElement | null)?.getAttribute("data-value") || ""
+    const data = {
+      firstName: (form.querySelector<HTMLInputElement>("#firstName")?.value || "").trim(),
+      lastName: (form.querySelector<HTMLInputElement>("#lastName")?.value || "").trim(),
+      email: (form.querySelector<HTMLInputElement>("#email")?.value || "").trim(),
+      phone: (form.querySelector<HTMLInputElement>("#phone")?.value || "").trim(),
+      destination,
+      departureDate: departureDate ? departureDate.toISOString() : undefined,
+      returnDate: returnDate ? returnDate.toISOString() : undefined,
+      travelers: travelers ? Number(travelers) : undefined,
+      budget,
+      comments: (form.querySelector<HTMLTextAreaElement>("#comments")?.value || "").trim(),
+    }
+    try {
+      setSubmitting(true)
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error("Failed to submit booking")
+      form.reset()
+      setDepartureDate(undefined)
+      setReturnDate(undefined)
+      alert("Booking request submitted! We'll contact you within 24 hours.")
+    } catch (err) {
+      alert("Failed to submit booking. Please try again later.")
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -118,7 +160,7 @@ export default function BookingPage() {
                   <div>
                     <div className="font-bold text-lg">{item.name}</div>
                     {item.price && (
-                      <div className="text-orange-600 font-semibold">{item.price} RWF</div>
+                      <div className="text-orange-600 font-semibold">${item.price}</div>
                     )}
                   </div>
                 </div>
@@ -189,17 +231,17 @@ export default function BookingPage() {
                 <div>
                   <Label htmlFor="destination">Preferred Destination</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger data-field="destination" data-value="">
                       <SelectValue placeholder="Select a destination" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="santorini">Santorini, Greece</SelectItem>
-                      <SelectItem value="bali">Bali, Indonesia</SelectItem>
-                      <SelectItem value="tokyo">Tokyo, Japan</SelectItem>
-                      <SelectItem value="machu-picchu">Machu Picchu, Peru</SelectItem>
-                      <SelectItem value="kenya">Safari Kenya</SelectItem>
-                      <SelectItem value="iceland">Iceland Ring Road</SelectItem>
-                      <SelectItem value="other">Other (specify in comments)</SelectItem>
+                      <SelectItem value="santorini" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "santorini")}>Santorini, Greece</SelectItem>
+                      <SelectItem value="bali" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "bali")}>Bali, Indonesia</SelectItem>
+                      <SelectItem value="tokyo" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "tokyo")}>Tokyo, Japan</SelectItem>
+                      <SelectItem value="machu-picchu" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "machu-picchu")}>Machu Picchu, Peru</SelectItem>
+                      <SelectItem value="kenya" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "kenya")}>Safari Kenya</SelectItem>
+                      <SelectItem value="iceland" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "iceland")}>Iceland Ring Road</SelectItem>
+                      <SelectItem value="other" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "other")}>Other (specify in comments)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -257,15 +299,15 @@ export default function BookingPage() {
                   <div>
                     <Label htmlFor="travelers">Number of Travelers</Label>
                     <Select>
-                      <SelectTrigger>
+                      <SelectTrigger data-field="travelers" data-value="">
                         <SelectValue placeholder="Select number" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="1">1 Person</SelectItem>
-                        <SelectItem value="2">2 People</SelectItem>
-                        <SelectItem value="3">3 People</SelectItem>
-                        <SelectItem value="4">4 People</SelectItem>
-                        <SelectItem value="5">5+ People</SelectItem>
+                        <SelectItem value="1" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "1")}>1 Person</SelectItem>
+                        <SelectItem value="2" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "2")}>2 People</SelectItem>
+                        <SelectItem value="3" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "3")}>3 People</SelectItem>
+                        <SelectItem value="4" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "4")}>4 People</SelectItem>
+                        <SelectItem value="5" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "5")}>5+ People</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -273,14 +315,14 @@ export default function BookingPage() {
                   <div>
                     <Label htmlFor="budget">Budget Range</Label>
                     <Select>
-                      <SelectTrigger>
+                      <SelectTrigger data-field="budget" data-value="">
                         <SelectValue placeholder="Select budget" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="budget">Under $500</SelectItem>
-                        <SelectItem value="mid">$500- $1000</SelectItem>
-                        <SelectItem value="luxury">$1000 - $1,500</SelectItem>
-                        <SelectItem value="premium">$2000+</SelectItem>
+                        <SelectItem value="budget" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "budget")}>Under $500</SelectItem>
+                        <SelectItem value="mid" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "mid")}>$500- $1000</SelectItem>
+                        <SelectItem value="luxury" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "luxury")}>$1000 - $1,500</SelectItem>
+                        <SelectItem value="premium" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "premium")}>$2000+</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -303,8 +345,8 @@ export default function BookingPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" size="lg">
-                Submit Booking Request
+              <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+                {submitting ? "Submitting..." : "Submit Booking Request"}
               </Button>
             </form>
           </CardContent>

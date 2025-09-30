@@ -49,7 +49,10 @@ export default function AdminUsersPage() {
       .then(async res => {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
-          throw new Error(data.error || "Failed to add user")
+          const details = data?.details?.fieldErrors
+          const firstField = details && Object.keys(details)[0]
+          const detailMsg = firstField && details[firstField]?.[0]
+          throw new Error(detailMsg || data.error || "Failed to add user")
         }
         setEmail("")
         setPassword("")
@@ -108,6 +111,7 @@ export default function AdminUsersPage() {
             <strong>{user.email}</strong> - {user.role}
           </li>
         ))}
+        {!users.length && !loading && <li className="text-gray-500">No users yet</li>}
       </ul>
     </div>
   )

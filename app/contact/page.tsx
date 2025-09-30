@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,9 +12,35 @@ import { Navigation } from "@/components/navigation"
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react"
 
 export default function ContactPage() {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    alert("Message sent! We'll get back to you within 24 hours.")
+    if (submitting) return
+    const form = e.currentTarget
+    const data = {
+      firstName: (form.querySelector<HTMLInputElement>("#firstName")?.value || "").trim(),
+      lastName: (form.querySelector<HTMLInputElement>("#lastName")?.value || "").trim(),
+      email: (form.querySelector<HTMLInputElement>("#email")?.value || "").trim(),
+      phone: (form.querySelector<HTMLInputElement>("#phone")?.value || "").trim(),
+      subject: (form.querySelector<HTMLInputElement>("#subject")?.value || "").trim(),
+      message: (form.querySelector<HTMLTextAreaElement>("#message")?.value || "").trim(),
+    }
+    try {
+      setSubmitting(true)
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error("Failed to send message")
+      form.reset()
+      alert("Message sent! We'll get back to you within 24 hours.")
+    } catch (err) {
+      alert("Failed to send message. Please try again later.")
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -75,9 +102,9 @@ export default function ContactPage() {
                       <Textarea id="message" placeholder="Tell us more about your inquiry..." rows={6} required />
                     </div>
 
-                    <Button type="submit" className="w-full" size="lg">
+                    <Button type="submit" className="w-full" size="lg" disabled={submitting}>
                       <Send className="w-4 h-4 mr-2" />
-                      Send Message
+                      {submitting ? "Sending..." : "Send Message"}
                     </Button>
                   </form>
                 </CardContent>

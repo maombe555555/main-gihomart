@@ -17,12 +17,12 @@ export default function ProgramsPage() {
 
   const staticPrograms = [
     {
-      name: "HANDCRAFTS SHOP",
+      name: "Hiking Helping local communities keeping beess ",
       description: "Visit our reception area (Bungwe Queen’s Park) to browse a curated selection of handcrafted souvenirs, showcasing the talents of local artisans and providing meaningful mementos of your Rwandan adventure.",
       image: "/images/handcraft.png"
     },
     {
-      name: "HISTORICAL TOURS",
+      name: " local communities ",
       description: "Uncover the fascinating history of Rwanda's powerful Queen Nyagakecuru and Ruganzu II Ndoli. Hike through stunning landscapes and historical sites as you unravel the mysteries of Rwanda's past.",
       image: "/images/historical.png"
     },
@@ -36,11 +36,7 @@ export default function ProgramsPage() {
       description: "We offer internship opportunities for students and professionals seeking hands-on experience in community-based tourism, conservation, and cultural heritage management.",
       image: "/images/intership.png"
     },
-    {
-      name: "RICE PLANTATION TOUR",
-      description: "Visit local rice fields and learn about the traditional and modern rice cultivation and harvesting techniques. Engage with farmers and gain insights into Rwanda’s agricultural heritage.",
-      image: "/images/rice.png"
-    },
+    
     {
       name: "BANANA BREWING",
       description: "Discover the art of traditional banana beer brewing, a cherished Rwandan cultural practice. Participate in the brewing process and enjoy the unique taste of this local specialty.",

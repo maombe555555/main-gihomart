@@ -28,7 +28,7 @@ export default function HomePage() {
       id: 1,
       name: "Sailing Trip",
       image: "/images/nmp.jpg?height=200&width=300",
-      price: "$7500",
+      price: "$25",
       duration: "7 days",
       location: "Huye Mountain",
       rating: 4.8,
@@ -37,7 +37,7 @@ export default function HomePage() {
       id: 2,
       name: " Cultural Experience",
       image: "/images/image1.jpg?height=200&width=300",
-      price: "$4500",
+      price: "$35",
       duration: "5 days",
       location: "Southern Province",
       rating: 4.9,
@@ -46,7 +46,7 @@ export default function HomePage() {
       id: 3,
       name: "Heritage Tour",
       image: "/images/RWANDA GOATS.jpg?height=200&width=300",
-      price: "$6500",
+      price: "$30",
       duration: "6 days",
       location: "Huye City",
       rating: 4.7,
@@ -55,7 +55,7 @@ export default function HomePage() {
       id: 4,
       name: "Cultural Experience",
       image: "/images/miss.jpg?height=200&width=300",
-      price: "$4500",
+      price: "$25",
       duration: "5 days",
       location: "Southern Province",
       rating: 4.9,
@@ -64,7 +64,7 @@ export default function HomePage() {
       id: 5,
       name: " Heritage Tour",
       image: "/images/IMG-20231126-WA0030.jpg?height=200&width=300",
-      price: "$6500",
+      price: "$30",
       duration: "6 days",
       location: "Huye City",
       rating: 4.7,
@@ -72,7 +72,7 @@ export default function HomePage() {
       id: 6,
       name: " Heritage Tour",
       image: "/images/DSC_0027.JPG?height=200&width=300",
-      price: "$6500",
+      price: "$25",
       duration: "6 days",
       location: "Huye City",
       rating: 4.7,
@@ -460,6 +460,11 @@ export default function HomePage() {
               </a>
               <a href="https://linkedin.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-blue-700">
                 <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11.75 20h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.25 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/></svg>
+              </a>
+              <a href="https://maps.app.goo.gl/XNZYCg1Gi2DB8ei8A?g_st=aw" target="_blank" rel="noopener noreferrer" aria-label="Google Maps" className="hover:text-green-500">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2C8.686 2 6 4.686 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6zm0 8.5c-1.381 0-2.5-1.119-2.5-2.5S10.619 5.5 12 5.5s2.5 1.119 2.5 2.5S13.381 10.5 12 10.5z"/>
+                </svg>
               </a>
             </div>
             <p>&copy; 2025 GiHomarts. All Rights Reserved.</p>
