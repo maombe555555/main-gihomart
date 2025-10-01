@@ -48,7 +48,7 @@ export default function HomePage() {
       image: "/images/RWANDA GOATS.jpg?height=200&width=300",
       price: "$30",
       duration: "6 days",
-      location: "HUYE"",
+  location: "HUYE",
       rating: 4.7,
     },
     {
