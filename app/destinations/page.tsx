@@ -19,7 +19,7 @@ export default function DestinationsPage() {
     {
       id: 1,
       name: "Santorini, Greece",
-      region: "Europe",
+      region: "Southern Province",
       image: "/placeholder.svg?height=250&width=350",
       rating: 4.9,
       price: "$1,299",
@@ -31,7 +31,7 @@ export default function DestinationsPage() {
     {
       id: 2,
       name: "Bali, Indonesia",
-      region: "Asia",
+      region: "Southern Province",
       image: "/placeholder.svg?height=250&width=350",
       rating: 4.8,
       price: "$899",
@@ -43,7 +43,7 @@ export default function DestinationsPage() {
     {
       id: 3,
       name: "Tokyo, Japan",
-      region: "Asia",
+      region: "Southern Province",
       image: "/placeholder.svg?height=250&width=350",
       rating: 4.7,
       price: "$1,599",
@@ -67,7 +67,7 @@ export default function DestinationsPage() {
     {
       id: 5,
       name: "Huye Mountain",
-      region: " Rwanda- Africa",
+      region: "Southern Province",
       image: "/placeholder.svg?height=250&width=350",
       rating: 4.8,
       price: "$200",
@@ -79,7 +79,7 @@ export default function DestinationsPage() {
     {
       id: 6,
       name: "Iceland Ring Road",
-      region: "Europe",
+      region: "Southern Province",
       image: "/placeholder.svg?height=250&width=350",
       rating: 4.6,
       price: "$1,799",
