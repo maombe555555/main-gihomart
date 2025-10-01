@@ -148,15 +148,13 @@ export default function HomePage() {
             Rwanda, we are dedicated to showcasing the rich heritage and natural wonders of our beloved country.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-orange-600 hover:bg-orange-700">
-              <Link href="/destinations">Explore Our Tours</Link>
-            </Button>
+      
             <Button
               asChild
               size="lg"
               variant="outline"
-              className="border-grey text-blue hover:bg-white hover:text-gray-900"
-            >
+              className="bg-orange-600 hover:bg-orange-700">
+            
               <Link href="/about">Learn More</Link>
             </Button>
           </div>
