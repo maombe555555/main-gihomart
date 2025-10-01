@@ -24,8 +24,8 @@ export function Navigation() {
               priority
             />
             <div className="flex flex-col">
-              <span className="font-bold text-lg leading-tight">GiHomarts</span>
-              <span className="text-xs text-muted-foreground leading-tight"> My heritage to day and tomorrow</span>
+              <span className="font-bold text-lg leading-tight">GiHomArts & Cultours Ltd</span>
+              <span className="text-xs text-muted-foreground leading-tight">My Heritage Today & Tomorrow</span>
             </div>
           </Link>
 
