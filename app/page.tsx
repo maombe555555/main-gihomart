@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 export default function HomePage() {
   const [products, setProducts] = useState([])
   const [programs, setPrograms] = useState([])
+  const [openModalId, setOpenModalId] = useState<number | null>(null);
   useEffect(() => {
     fetch("/api/products")
       .then(res => res.json())
@@ -30,7 +31,7 @@ export default function HomePage() {
       image: "/images/nmp.jpg?height=200&width=300",
       price: "$25",
       duration: "7 days",
-      location: "Huye Mountain",
+      location: "HUYE MOUNTAIN ",
       rating: 4.8,
     },
     {
@@ -44,7 +45,7 @@ export default function HomePage() {
     },
     {
       id: 3,
-      name: "Heritage Tour",
+      name: "Tour to a goat farm",
       image: "/images/RWANDA GOATS.jpg?height=200&width=300",
       price: "$30",
       duration: "6 days",
@@ -53,7 +54,7 @@ export default function HomePage() {
     },
     {
       id: 4,
-      name: "Cultural Experience",
+      name: "Coffee Experience",
       image: "/images/miss.jpg?height=200&width=300",
       price: "$25",
       duration: "5 days",
@@ -62,42 +63,56 @@ export default function HomePage() {
     },
     {
       id: 5,
-      name: " Heritage Tour",
+      name: " Hiking Tour",
       image: "/images/IMG-20231126-WA0030.jpg?height=200&width=300",
-      price: "$30",
+      price: "$25",
       duration: "6 days",
       location: "HUYE",
       rating: 4.7,
     },  {
       id: 6,
-      name: " Heritage Tour",
+      name: " Heritage and Historical  Tour",
       image: "/images/DSC_0027.JPG?height=200&width=300",
       price: "$25",
       duration: "6 days",
-      location: "Huye City",
+      location: "HUYE",
       rating: 4.7,
     }, ]
 
   const travelArticles = [
     {
       id: 1,
-      title: "Cycling Through Rwanda's Hills",
-      image: "/images/huye tour.jpg?height=200&width=300",
+      title: "Cycling Through Huye's Hills",
+      image: "/images/hq720.jpg?height=200&width=300",
       excerpt: "Discover the beauty of Rwanda's landscape on two wheels",
+      fullText: `Huye, Rwanda’s cultural and academic capital, offers more than intellectual depth, it’s a landscape of rolling hills, quiet trails, and scenic routes that invite cyclists into a journey of discovery. Whether you’re a student seeking weekend refreshment or a traveler exploring Rwanda’s southern charm, cycling through Huye’s hills is a soulful experience that blends nature, culture, and community.
+
+The terrain around Huye is ideal for moderate cycling. Gentle slopes wind past banana plantations, eucalyptus groves, and red-soil paths that connect villages and farms. Riders can start from the University of Rwanda’s Huye Campus and venture toward Ruhande Arboretum, a peaceful forest with shaded trails and rare plant species. From there, routes extend toward Tumba, Ngoma, and Gishamvu, offering panoramic views of valleys and traditional homesteads.
+
+Cycling in Huye is not just about movement,it’s about immersion. Along the way, riders encounter local artisans weaving baskets, farmers tending fields, and children waving from roadside paths. These moments foster connection and reflect the warmth of Rwandan hospitality. For those interested in cultural stops, the National Ethnographic Museum provides a perfect midpoint for rest and reflection, with exhibits that deepen appreciation for Rwanda’s heritage.`,
       readTime: "5 min read",
     },
     {
       id: 2,
       title: "Traditional Rwandan Culture",
       image: "/images/inzo.jpg?height=200&width=300",
-      excerpt: "Immerse yourself in authentic cultural experiences",
+        excerpt: "Discover the ritual and meaning behind ikigage, Rwanda's traditional sorghum brew.",
+        fullText: `In the heart of Rwanda’s cultural heritage lies ikigage, a traditional sorghum based brew that embodies community, celebration, and ancestral wisdom. More than just a beverage, ikigage represents a ritual of connection between people, generations, and the land itself. Its preparation and consumption are deeply woven into the social fabric of Rwandan life, making it a powerful symbol of identity and unity. Ikigage is typically brewed using sorghum flour (uburo), water, and occasionally honey. The process begins with fermentation in clay pots, where the mixture bubbles and froths, signaling life and readiness. Wooden sticks are used to stir the brew, and the entire setup reflects a rustic, time honored method passed down through generations. The clay pot itself is not just a vessel ,it’s a cultural artifact that preserves temperature, flavor, and tradition. This drink plays a central role in communal gatherings, including weddings, naming ceremonies, harvest celebrations, and rites of passage. It is served with pride and shared among guests as a gesture of hospitality and respect. Brewing ikigage is often accompanied by storytelling, songs, and blessings, turning the act into a communal experience that reinforces social bonds and preserves oral history. For travelers and cultural enthusiasts, engaging with ikigage offers a unique window into Rwandan life. Through community-based tourism initiatives like those offered by Gihomarts, visitors can participate in brewing sessions, learn the symbolism behind each step, and hear firsthand stories from elders who carry the tradition forward. These experiences go beyond observation ,they invite immersion, understanding, and appreciation. In a rapidly modernizing world, traditions like ikigage remind us of the value of heritage and the importance of preserving cultural practices. They offer continuity, identity, and a sense of belonging. For Rwanda, ikigage is not just a drink,it is a living tradition that continues to nourish both body and spirit.`,
       readTime: "8 min read",
-    },
+    }, 
     {
       id: 3,
       title: "Community Tourism Impact",
       image: "/images/today.jpg?height=200&width=300",
       excerpt: "How tourism supports local communities in Rwanda",
+      fullText: `Nestled in the southern province of Rwanda, Huye formerly known as Butare is widely regarded as the country’s cultural and intellectual capital. With its rich history, vibrant academic life, and deep-rooted traditions, Huye offers visitors a unique window into Rwanda’s soul.
+One of Huye’s most iconic landmarks is the National Ethnographic Museum, home to the largest collection of cultural artifacts in Rwanda. From traditional tools and musical instruments to ceremonial clothing and ancient crafts, the museum provides a comprehensive journey through Rwanda’s pre-colonial, colonial, and post-independence eras. Visitors can explore full-scale dioramas, listen to guided stories, and witness live performances of traditional dance and drumming.
+
+Beyond the museum, Huye’s charm lies in its community life and architecture. The city’s colonial-era buildings, red-brick Catholic cathedral, and leafy boulevards reflect a blend of historical depth and modern development. Thanks to urban renewal projects, Huye now boasts clean, green spaces and improved infrastructure, making it both welcoming and walkable.
+
+Huye is also home to the University of Rwanda’s Huye Campus, formerly the National University of Rwanda. This academic hub has earned the city a reputation as Rwanda’s intellectual center. The surrounding Arboretum of Ruhande, established in 1933, offers a tranquil escape and a chance to explore indigenous and exotic plant species.
+
+For those seeking authentic cultural experiences, Huye provides access to community-based tourism. Visitors can engage with local artisans, participate in traditional cooking and brewing (such as ikigage), and join guided tours to nearby villages. These interactions foster mutual understanding and support local livelihoods.`,
       readTime: "6 min read",
     },
   ]
@@ -287,34 +302,70 @@ export default function HomePage() {
                   <Image src={article.image || "/miss.jpg"} alt={article.title} fill className="object-cover" />
                 </div>
                 <CardHeader>
-                  <CardTitle className="text-lg">{article.title}</CardTitle>
-                  <CardDescription>{article.excerpt}</CardDescription>
+                  <CardTitle className="text-lg font-semibold text-orange-700">{article.title}</CardTitle>
+                  <CardDescription className="text-gray-600">{article.excerpt}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">{article.readTime}</span>
-                    <Button variant="outline" size="sm">
-                      Read More
-                    </Button>
+                    {article.fullText ? (
+                      <Button variant="outline" size="sm" className="border-orange-600 text-orange-600 hover:bg-orange-50" onClick={() => setOpenModalId(article.id)}>
+                        Read More
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm">
+                        Read More
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
             ))}
+            {/* Modal for fullText */}
+            {travelArticles.map(
+              (article) =>
+                article.fullText && openModalId === article.id ? (
+                  <div
+                    key={article.id}
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+                    onClick={() => setOpenModalId(null)}
+                  >
+                    <div
+                      className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative border border-orange-200"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        className="absolute top-4 right-4 text-gray-400 hover:text-orange-600 text-2xl font-bold focus:outline-none"
+                        aria-label="Close modal"
+                        onClick={() => setOpenModalId(null)}
+                      >
+                        ×
+                      </button>
+                      <h3 className="text-3xl font-bold mb-6 text-orange-700 text-center">{article.title}</h3>
+                      <div className="max-h-[60vh] overflow-y-auto pr-2">
+                        <p className="text-gray-800 leading-relaxed whitespace-pre-line text-base md:text-lg">
+                          {article.fullText}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : null
+            )}
           </div>
 
           {/* Featured Video */}
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/yrqUF9O164U"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="absolute inset-0 w-full h-full rounded-lg"
-              ></iframe>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/yrqUF9O164U"
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full rounded-lg"
+                />
             </div>
             <div className="relative h-64">
               <Image

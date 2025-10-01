@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,15 +14,38 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Navigation } from "@/components/navigation"
 import { CalendarIcon, Phone, Mail } from "lucide-react"
-import { cn } from "@/lib/utils"
-
 export default function BookingPage() {
+  // ...existing code...
   const [departureDate, setDepartureDate] = useState<Date>()
   const [returnDate, setReturnDate] = useState<Date>()
   const [products, setProducts] = useState<any[]>([])
   const [programs, setPrograms] = useState<any[]>([])
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [viewProduct, setViewProduct] = useState<any | null>(null);
+  const { toast } = useToast();
+
+  // Auto-select program from query param
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Read selected programs/products from localStorage
+      const selected = JSON.parse(localStorage.getItem("selectedPrograms") || "[]");
+      if (selected.length > 0) {
+        setSelectedProducts(selected);
+        localStorage.removeItem("selectedPrograms");
+      } else {
+        // Fallback: single program from query param
+        const params = new URLSearchParams(window.location.search);
+        const programName = params.get("program");
+        if (programName) {
+          const allPrograms = [...programs, ...coreServices];
+          const found = allPrograms.find(p => p.name === programName);
+          if (found && !selectedProducts.some(p => p.name === found.name)) {
+            setSelectedProducts(prev => [...prev, found]);
+          }
+        }
+      }
+    }
+  }, [programs]);
 
   // Core services (same as products page)
   const coreServices = [
@@ -29,42 +53,42 @@ export default function BookingPage() {
       name: "HIKING",
       description:
         "Embark on exhilarating hikes to explore the historical and awe-inspiring Huye Mountain. Our expert guides will lead you on unforgettable journeys through breathtaking landscapes and hidden treasures.",
-      image: "/images/huye tour.jpg",
+      image: "/images/hiking.png",
       price: 25,
     },
     {
       name: "CAMPING",
       description:
         "Spend a night under the stars atop Huye Mountain with our camping experiences. Relax in comfortable tents, surrounded by stunning vistas and the sounds of nature, and awaken to unforgettable sunrise views.",
-      image: "/images/back.jpg",
+      image: "/images/camping.png",
       price: 30,
     },
     {
       name: "MOUNTAIN BIKING",
       description:
         "Embark on adrenaline-pumping mountain biking adventures through Huye mountains. Explore rugged trails, picturesque villages, and breathtaking viewpoints with our experienced guides.",
-      image: "/images/intore.jpg",
+      image: "/images/mountain biking.png",
       price: 25,
     },
     {
       name: "COFFEE EXPERIENCE",
       description:
         "Delve into Rwanda's rich coffee culture with our immersive coffee experience. Discover the journey from bean to cup and savor the flavors of this beloved brew amidst stunning natural surroundings.",
-      image: "/images/kawa.webp",
+      image: "/images/mb.jpg",
       price: 25,
     },
     {
       name: "HUYE BRAIN CITY TOUR",
       description:
         "Experience the charm and history of Huye city on two wheels with our guided mountain bike tours. Pedal through ancient streets, historic sites, and vibrant neighborhoods as you discover the city's unique character.",
-      image: "/images/huye tour.jpg",
+      image: "/images/maxresdefault.jpg",
       price: 25,
     },
     {
       name: "RWANDAN CUISINE",
       description:
         "Join us for a culinary journey through Rwanda's traditional cuisine. Learn to prepare authentic dishes using locally sourced ingredients and traditional cooking methods, and savor the flavors of our rich culinary heritage.",
-      image: "/images/cousine.png",
+      image: "/images/Rwandan cuisine.png",
       price: 25,
     },
   ];
@@ -158,7 +182,7 @@ export default function BookingPage() {
               <div key={item._id || item.name} className="border rounded-lg p-4 bg-white shadow">
                 <div className="flex items-center gap-4 mb-2">
                   {item.image && (
-                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
+                    <img src={item.image} alt={item.name} className="w-32 h-32 object-cover rounded-xl border border-gray-200 shadow-md" />
                   )}
                   <div>
                     <div className="font-bold text-lg">{item.name}</div>
@@ -175,7 +199,16 @@ export default function BookingPage() {
                   <Button variant="secondary" onClick={() => setViewProduct(item)}>
                     View Details
                   </Button>
-                  <Button variant="default" onClick={() => setSelectedProducts(prev => prev.some(p => p.name === item.name) ? prev : [...prev, item])}>
+                  <Button
+                    variant="default"
+                    onClick={() => {
+                      setSelectedProducts(prev => {
+                        if (prev.some(p => p.name === item.name)) return prev;
+                        toast({ title: "Added to Booking", description: `${item.name} has been added to your booking.` });
+                        return [...prev, item];
+                      });
+                    }}
+                  >
                     Add to Booking
                   </Button>
                 </div>
@@ -354,14 +387,27 @@ export default function BookingPage() {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
             <h2 className="text-xl font-bold mb-2">{viewProduct.name}</h2>
-            {viewProduct.image && <img src={viewProduct.image} alt={viewProduct.name} className="w-full h-40 object-cover rounded mb-2" />}
+            {viewProduct.image && <img src={viewProduct.image} alt={viewProduct.name} className="w-full h-64 object-cover rounded-xl border border-gray-200 shadow mb-2" />}
             <div className="mb-2">{viewProduct.description}</div>
             {viewProduct.price && <div className="text-orange-600 font-semibold mb-2">${viewProduct.price}</div>}
-            <Button variant="default" className="mr-2" onClick={() => setSelectedProducts(prev => prev.some(p => p.name === viewProduct.name) ? prev : [...prev, viewProduct])}>Add to Booking</Button>
+            <Button
+              variant="default"
+              className="mr-2"
+              onClick={() => {
+                setSelectedProducts(prev => {
+                  if (prev.some(p => p.name === viewProduct.name)) return prev;
+                  toast({ title: "Added to Booking", description: `${viewProduct.name} has been added to your booking.` });
+                  return [...prev, viewProduct];
+                });
+              }}
+            >
+              Add to Booking
+            </Button>
             <Button variant="secondary" onClick={() => setViewProduct(null)}>Close</Button>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
+
