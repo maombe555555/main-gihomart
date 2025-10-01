@@ -23,6 +23,9 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
+// Booking Model
+const Booking = require('./Booking');
+
 // Routes
 app.get('/', (req, res) => {
   res.send('Backend is running!');
@@ -42,6 +45,21 @@ app.post('/api/products', async (req, res) => {
   res.status(201).json(product);
 });
 
+
+// Get all bookings
+app.get('/api/bookings', async (req, res) => {
+  const bookings = await Booking.find();
+  res.json(bookings);
+});
+
+// Add a booking
+app.post('/api/bookings', async (req, res) => {
+  const { firstName, lastName, email, phone, departureDate, returnDate, travelers, budget, comments } = req.body;
+  const booking = new Booking({ firstName, lastName, email, phone, departureDate, returnDate, travelers, budget, comments });
+  await booking.save();
+  res.status(201).json({ message: "Booking request submitted! We'll contact you within 24 hours.", booking });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-}); 
+});
