@@ -54,9 +54,32 @@ app.get('/api/bookings', async (req, res) => {
 
 // Add a booking
 app.post('/api/bookings', async (req, res) => {
-  const { firstName, lastName, email, phone, departureDate, returnDate, travelers, budget, comments } = req.body;
-  const booking = new Booking({ firstName, lastName, email, phone, departureDate, returnDate, travelers, budget, comments });
+  const { firstName, lastName, email, phone, residence, departureDate, returnDate, travelers, budget, comments, products } = req.body;
+  const booking = new Booking({ firstName, lastName, email, phone, residence, departureDate, returnDate, travelers, budget, comments, products });
   await booking.save();
+
+  // Send admin notification email
+  try {
+    const { sendMail } = require('../lib/mail');
+    await sendMail({
+      to: process.env.ADMIN_EMAIL || 'gihomart@250gmail.com',
+      subject: 'New Booking Received',
+      html: `<h2>New Booking Request</h2>
+        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Residence:</strong> ${residence}</p>
+        <p><strong>Departure:</strong> ${departureDate}</p>
+        <p><strong>Return:</strong> ${returnDate}</p>
+        <p><strong>Travelers:</strong> ${travelers}</p>
+        <p><strong>Budget:</strong> ${budget}</p>
+        <p><strong>Comments:</strong> ${comments}</p>
+        <p><strong>Products:</strong> ${(products && products.length) ? products.map(p => p.name + (p.price ? ` ($${p.price})` : '')).join(', ') : 'None'}</p>`
+    });
+  } catch (err) {
+    console.error('Failed to send admin email:', err);
+  }
+
   res.status(201).json({ message: "Booking request submitted! We'll contact you within 24 hours.", booking });
 });
 

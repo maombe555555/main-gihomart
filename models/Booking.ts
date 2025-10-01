@@ -12,11 +12,13 @@ const BookingSchema = new mongoose.Schema({
   },
   phone: { type: String, required: true, trim: true },
   // destination removed
+  residence: { type: String, trim: true },
   departureDate: { type: Date },
   returnDate: { type: Date },
   travelers: { type: Number, default: 1, min: 1 },
   budget: { type: String, trim: true },
   comments: { type: String, trim: true },
+  products: { type: Array, default: [] },
   createdAt: { type: Date, default: Date.now },
 })
 

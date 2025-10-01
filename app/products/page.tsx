@@ -123,7 +123,7 @@ export default function ProductsPage() {
                 )}
                 <div className="text-sm text-blue-700 font-medium">To pay, use MoMo +250 788 440 243</div>
                 <Button asChild variant="outline" size="sm" className="mt-2">
-                  <Link href="/products">Read More</Link>
+                  <Link href="/booking">Book Now</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -150,7 +150,7 @@ export default function ProductsPage() {
                 )}
                 <div className="text-sm text-blue-700 font-medium">To pay, use MoMo +250 788 440 243</div>
                 <Button asChild variant="outline" size="sm" className="mt-2">
-                  <Link href="/products">Read More</Link>
+                  <Link href={`/products/${product._id}`}>Read More</Link>
                 </Button>
               </CardContent>
             </Card>

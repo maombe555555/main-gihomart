@@ -10,7 +10,7 @@ export async function GET() {
   try {
     await dbConnect()
     const bookings = await Booking.find().select(
-      "_id firstName lastName email phone destination departureDate returnDate travelers budget comments createdAt"
+      "_id firstName lastName email phone residence departureDate returnDate travelers budget comments createdAt"
     )
     return Response.json(bookings)
   } catch (error) {
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       lastName: z.string().min(1),
       email: z.string().email(),
       phone: z.string().min(3),
-      destination: z.string().optional().default(""),
+      residence: z.string().optional().default(""),
       departureDate: z.coerce.date().optional(),
       returnDate: z.coerce.date().optional(),
       travelers: z.coerce.number().int().min(1).default(1),
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       <p><strong>Name:</strong> ${fullName}</p>
       <p><strong>Email:</strong> ${d.email}</p>
       <p><strong>Phone:</strong> ${d.phone}</p>
-      ${d.destination ? `<p><strong>Destination:</strong> ${d.destination}</p>` : ""}
+      ${d.residence ? `<p><strong>Residence:</strong> ${d.residence}</p>` : ""}
       ${d.departureDate ? `<p><strong>Departure:</strong> ${new Date(d.departureDate).toLocaleDateString()}</p>` : ""}
       ${d.returnDate ? `<p><strong>Return:</strong> ${new Date(d.returnDate).toLocaleDateString()}</p>` : ""}
       <p><strong>Travelers:</strong> ${d.travelers}</p>
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       <h2>Thanks for your booking request</h2>
       <p>Hi ${fullName},</p>
       <p>We received your booking request and will contact you shortly.</p>
-      ${d.destination ? `<p><strong>Destination:</strong> ${d.destination}</p>` : ""}
+      ${d.residence ? `<p><strong>Residence:</strong> ${d.residence}</p>` : ""}
       ${d.departureDate ? `<p><strong>Departure:</strong> ${new Date(d.departureDate).toLocaleDateString()}</p>` : ""}
       ${d.returnDate ? `<p><strong>Return:</strong> ${new Date(d.returnDate).toLocaleDateString()}</p>` : ""}
       <p><strong>Travelers:</strong> ${d.travelers}</p>

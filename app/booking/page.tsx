@@ -20,6 +20,8 @@ export default function BookingPage() {
   const [returnDate, setReturnDate] = useState<Date>()
   const [products, setProducts] = useState<any[]>([])
   const [programs, setPrograms] = useState<any[]>([])
+  const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
+  const [viewProduct, setViewProduct] = useState<any | null>(null);
 
   // Core services (same as products page)
   const coreServices = [
@@ -97,7 +99,7 @@ export default function BookingPage() {
     e.preventDefault()
     if (submitting) return
     const form = e.currentTarget
-    const destination = (form.querySelector("[data-field='destination']") as HTMLElement | null)?.getAttribute("data-value") || ""
+    const residence = (form.querySelector("[data-field='residence']") as HTMLElement | null)?.getAttribute("data-value") || ""
     const travelers = (form.querySelector("[data-field='travelers']") as HTMLElement | null)?.getAttribute("data-value") || ""
     const budget = (form.querySelector("[data-field='budget']") as HTMLElement | null)?.getAttribute("data-value") || ""
     const data = {
@@ -105,12 +107,13 @@ export default function BookingPage() {
       lastName: (form.querySelector<HTMLInputElement>("#lastName")?.value || "").trim(),
       email: (form.querySelector<HTMLInputElement>("#email")?.value || "").trim(),
       phone: (form.querySelector<HTMLInputElement>("#phone")?.value || "").trim(),
-      destination,
+      residence,
       departureDate: departureDate ? departureDate.toISOString() : undefined,
       returnDate: returnDate ? returnDate.toISOString() : undefined,
       travelers: travelers ? Number(travelers) : undefined,
       budget,
       comments: (form.querySelector<HTMLTextAreaElement>("#comments")?.value || "").trim(),
+      products: selectedProducts,
     }
     try {
       setSubmitting(true)
@@ -168,6 +171,14 @@ export default function BookingPage() {
                 {item.price && (
                   <div className="text-sm text-blue-700 font-medium">To pay, use MoMo +250 788 440 243</div>
                 )}
+                <div className="flex gap-2 mt-2">
+                  <Button variant="secondary" onClick={() => setViewProduct(item)}>
+                    View Details
+                  </Button>
+                  <Button variant="default" onClick={() => setSelectedProducts(prev => prev.some(p => p.name === item.name) ? prev : [...prev, item])}>
+                    Add to Booking
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -229,104 +240,37 @@ export default function BookingPage() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Trip Details</h3>
                 <div>
-                  <Label htmlFor="destination">Preferred Destination</Label>
+                  <Label htmlFor="residence">Customer Residence</Label>
                   <Select>
-                    <SelectTrigger data-field="destination" data-value="">
-                      <SelectValue placeholder="Select a destination" />
+                    <SelectTrigger data-field="residence" data-value="">
+                      <SelectValue placeholder="Select residence region" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="santorini" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "santorini")}>Santorini, Greece</SelectItem>
-                      <SelectItem value="bali" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "bali")}>Bali, Indonesia</SelectItem>
-                      <SelectItem value="tokyo" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "tokyo")}>Tokyo, Japan</SelectItem>
-                      <SelectItem value="machu-picchu" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "machu-picchu")}>Machu Picchu, Peru</SelectItem>
-                      <SelectItem value="kenya" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "kenya")}>Safari Kenya</SelectItem>
-                      <SelectItem value="iceland" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "iceland")}>Iceland Ring Road</SelectItem>
-                      <SelectItem value="other" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "other")}>Other (specify in comments)</SelectItem>
+                      <SelectItem value="rwanda" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "rwanda")}>Rwanda</SelectItem>
+                      <SelectItem value="east-africa" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "east-africa")}>East Africa</SelectItem>
+                      <SelectItem value="africa" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "africa")}>Rest of Africa</SelectItem>
+                      <SelectItem value="europe" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "europe")}>Europe</SelectItem>
+                      <SelectItem value="asia" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "asia")}>Asia</SelectItem>
+                      <SelectItem value="americas" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "americas")}>Americas</SelectItem>
+                      <SelectItem value="oceania" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "oceania")}>Oceania</SelectItem>
+                      <SelectItem value="other" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "other")}>Other</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label>Departure Date</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !departureDate && "text-muted-foreground",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {departureDate ? departureDate.toLocaleDateString() : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={departureDate}
-                          onSelect={setDepartureDate}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                {/* Selected Products */}
+                {selectedProducts.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="font-semibold mb-2">Selected Products</h4>
+                    <ul className="list-disc pl-5">
+                      {selectedProducts.map((prod, i) => (
+                        <li key={prod._id || prod.name} className="mb-1 flex justify-between items-center">
+                          <span>{prod.name} {prod.price ? `($${prod.price})` : ''}</span>
+                          <Button size="sm" variant="destructive" onClick={() => setSelectedProducts(selectedProducts.filter(p => p.name !== prod.name))}>Remove</Button>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-
-                  <div>
-                    <Label>Return Date</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !returnDate && "text-muted-foreground",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {returnDate ? returnDate.toLocaleDateString() : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar mode="single" selected={returnDate} onSelect={setReturnDate} initialFocus />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="travelers">Number of Travelers</Label>
-                    <Select>
-                      <SelectTrigger data-field="travelers" data-value="">
-                        <SelectValue placeholder="Select number" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "1")}>1 Person</SelectItem>
-                        <SelectItem value="2" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "2")}>2 People</SelectItem>
-                        <SelectItem value="3" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "3")}>3 People</SelectItem>
-                        <SelectItem value="4" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "4")}>4 People</SelectItem>
-                        <SelectItem value="5" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "5")}>5+ People</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="budget">Budget Range</Label>
-                    <Select>
-                      <SelectTrigger data-field="budget" data-value="">
-                        <SelectValue placeholder="Select budget" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="budget" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "budget")}>Under $500</SelectItem>
-                        <SelectItem value="mid" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "mid")}>$500- $1000</SelectItem>
-                        <SelectItem value="luxury" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "luxury")}>$1000 - $1,500</SelectItem>
-                        <SelectItem value="premium" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "premium")}>$2000+</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* Additional Information */}
@@ -405,6 +349,19 @@ export default function BookingPage() {
           </CardContent>
         </Card>
       </div>
+
+      {viewProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
+            <h2 className="text-xl font-bold mb-2">{viewProduct.name}</h2>
+            {viewProduct.image && <img src={viewProduct.image} alt={viewProduct.name} className="w-full h-40 object-cover rounded mb-2" />}
+            <div className="mb-2">{viewProduct.description}</div>
+            {viewProduct.price && <div className="text-orange-600 font-semibold mb-2">${viewProduct.price}</div>}
+            <Button variant="default" className="mr-2" onClick={() => setSelectedProducts(prev => prev.some(p => p.name === viewProduct.name) ? prev : [...prev, viewProduct])}>Add to Booking</Button>
+            <Button variant="secondary" onClick={() => setViewProduct(null)}>Close</Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
