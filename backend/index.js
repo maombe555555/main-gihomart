@@ -1,3 +1,16 @@
+// ContactMessage Model
+const ContactMessage = require('../models/ContactMessage');
+// Add a contact message
+app.post('/api/contact', async (req, res) => {
+  const { firstName, lastName, email, phone, subject, message } = req.body;
+  try {
+    const contactMessage = new ContactMessage({ firstName, lastName, email, phone, subject, message });
+    await contactMessage.save();
+    res.status(201).json({ message: 'Your message has been received. We will contact you soon.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to save message.' });
+  }
+});
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');

@@ -13,6 +13,7 @@ import { MapPin, Phone, Mail, Clock, Send } from "lucide-react"
 
 export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false)
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string[] }>({})
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -26,6 +27,17 @@ export default function ContactPage() {
       subject: (form.querySelector<HTMLInputElement>("#subject")?.value || "").trim(),
       message: (form.querySelector<HTMLTextAreaElement>("#message")?.value || "").trim(),
     }
+    // Required field validation
+    const fieldErrors: { [key: string]: string[] } = {};
+    if (!data.firstName) fieldErrors.firstName = ["Required"];
+    if (!data.lastName) fieldErrors.lastName = ["Required"];
+    if (!data.email) fieldErrors.email = ["Required"];
+    if (!data.subject) fieldErrors.subject = ["Required"];
+    if (!data.message) fieldErrors.message = ["Required"];
+    setFormErrors(fieldErrors);
+    if (Object.keys(fieldErrors).length > 0) {
+      return;
+    }
     try {
       setSubmitting(true)
       const res = await fetch("/api/contact", {
@@ -35,6 +47,7 @@ export default function ContactPage() {
       })
       if (!res.ok) throw new Error("Failed to send message")
       form.reset()
+      setFormErrors({});
       alert("Message sent! We'll get back to you within 24 hours.")
     } catch (err) {
       alert("Failed to send message. Please try again later.")
@@ -75,16 +88,19 @@ export default function ContactPage() {
                       <div>
                         <Label htmlFor="firstName">First Name</Label>
                         <Input id="firstName" placeholder="MAOMBE" required />
+                        {formErrors.firstName && <span className="text-red-600 text-xs">{formErrors.firstName[0]}</span>}
                       </div>
                       <div>
                         <Label htmlFor="lastName">Last Name</Label>
                         <Input id="lastName" placeholder="EMMANUEL" required />
+                        {formErrors.lastName && <span className="text-red-600 text-xs">{formErrors.lastName[0]}</span>}
                       </div>
                     </div>
 
                     <div>
                       <Label htmlFor="email">Email Address</Label>
                       <Input id="email" type="email" placeholder="maombe@example.com" required />
+                      {formErrors.email && <span className="text-red-600 text-xs">{formErrors.email[0]}</span>}
                     </div>
 
                     <div>
@@ -95,11 +111,13 @@ export default function ContactPage() {
                     <div>
                       <Label htmlFor="subject">Subject</Label>
                       <Input id="subject" placeholder="How can we help you?" required />
+                      {formErrors.subject && <span className="text-red-600 text-xs">{formErrors.subject[0]}</span>}
                     </div>
 
                     <div>
                       <Label htmlFor="message">Message</Label>
                       <Textarea id="message" placeholder="Tell us more about your inquiry..." rows={6} required />
+                      {formErrors.message && <span className="text-red-600 text-xs">{formErrors.message[0]}</span>}
                     </div>
 
                     <Button type="submit" className="w-full" size="lg" disabled={submitting}>
