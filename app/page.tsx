@@ -39,7 +39,7 @@ export default function HomePage() {
       image: "/images/image1.jpg?height=200&width=300",
       price: "$35",
       duration: "5 days",
-      location: "Southern Province",
+      location: "HUYE",
       rating: 4.9,
     },
     {
@@ -48,7 +48,7 @@ export default function HomePage() {
       image: "/images/RWANDA GOATS.jpg?height=200&width=300",
       price: "$30",
       duration: "6 days",
-      location: "Huye City",
+      location: "HUYE"",
       rating: 4.7,
     },
     {
@@ -57,7 +57,7 @@ export default function HomePage() {
       image: "/images/miss.jpg?height=200&width=300",
       price: "$25",
       duration: "5 days",
-      location: "Southern Province",
+      location: "HUYE",
       rating: 4.9,
     },
     {
@@ -66,7 +66,7 @@ export default function HomePage() {
       image: "/images/IMG-20231126-WA0030.jpg?height=200&width=300",
       price: "$30",
       duration: "6 days",
-      location: "Huye City",
+      location: "HUYE",
       rating: 4.7,
     },  {
       id: 6,
