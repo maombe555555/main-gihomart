@@ -112,7 +112,7 @@ export default function DocumentationPage() {
       author: "Kajuga jerome",
       readTime: "14 min read",
       publishDate: "2024-11-25",
-      image: "/images/rwandan cuisine.png?height=200&width=300",
+      image: "/images/rwandan cuisine?height=200&width=300",
       tags: ["Cuisine", "Food", "Traditional", "Cooking", "Culture"],
       featured: false,
     },

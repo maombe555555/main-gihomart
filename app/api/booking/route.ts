@@ -25,12 +25,13 @@ export async function POST(req: Request) {
       lastName: z.string().min(1),
       email: z.string().email(),
       phone: z.string().min(3),
-      residence: z.string().optional().default(""),
+      residence: z.string().optional().default("") ,
       departureDate: z.coerce.date().optional(),
       returnDate: z.coerce.date().optional(),
       travelers: z.coerce.number().int().min(1).default(1),
-      budget: z.string().optional().default(""),
-      comments: z.string().optional().default(""),
+      budget: z.string().optional().default("") ,
+      comments: z.string().optional().default("") ,
+      products: z.array(z.object({ name: z.string(), price: z.number().optional() })).optional().default([]),
     })
   const parsed = schema.safeParse(body)
   if (!parsed.success) {

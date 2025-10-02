@@ -20,7 +20,12 @@ import {
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [adminEmail, setAdminEmail] = useState("")
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<{
+    users: number | null,
+    docs: number | null,
+    products: number | null,
+    programs: number | null,
+  }>({
     users: null,
     docs: null,
     products: null,
@@ -146,25 +151,38 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-              <Badge className="ml-3 bg-green-100 text-green-800">Tourism Website</Badge>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+      {/* Well-arranged Header Navigation Bar */}
+      <header className="w-full fixed top-0 left-0 z-50 bg-white shadow border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
+          {/* Logo and Brand Block */}
+          <div className="flex items-center gap-4">
+            <img src="/images/logooo.jpg" alt="GiHomArts & Cultours Ltd Logo" className="h-12 w-12 rounded-full border border-gray-300" />
+            <div className="flex flex-col">
+              <span className="font-bold text-2xl text-black leading-tight">GiHomArts &amp; Cultours Ltd</span>
+              <span className="text-base text-gray-500 font-normal -mt-1">My Heritage Today &amp; Tomorrow</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome, {adminEmail}</span>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
+          </div>
+          {/* Navigation Links (no Admin link) */}
+          <nav className="flex gap-6 items-center">
+            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
+            <a href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition">Products</a>
+            <a href="/programs" className="text-gray-700 hover:text-blue-600 font-medium transition">Programs</a>
+            <a href="/booking" className="text-gray-700 hover:text-blue-600 font-medium transition">Booking</a>
+            <a href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition">Contact</a>
+          </nav>
+          {/* Welcome and Logout */}
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-gray-600">Welcome, {adminEmail}</span>
+            <Button variant="outline" size="sm" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
           </div>
         </div>
       </header>
+      {/* Spacer for fixed nav */}
+      <div className="h-16" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}

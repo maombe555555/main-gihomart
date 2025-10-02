@@ -3,16 +3,16 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Navigation } from "@/components/navigation"
+import { Button, buttonVariants } from "../../components/ui/button"
+import { useToast, toast } from "../../components/ui/use-toast"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
+import { Input } from "../../components/ui/input"
+import { Label } from "../../components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
+import { Textarea } from "../../components/ui/textarea"
+import { Calendar } from "../../components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover"
+import { Navigation } from "../../components/navigation"
 import { CalendarIcon, Phone, Mail } from "lucide-react"
 export default function BookingPage() {
   // ...existing code...
@@ -159,11 +159,35 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+      {/* Well-arranged Header Navigation Bar */}
+      <header className="w-full fixed top-0 left-0 z-50 bg-white shadow border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
+          {/* Logo and Brand Block */}
+          <div className="flex items-center gap-4">
+            <img src="/images/logooo.jpg" alt="GiHomArts & Cultours Ltd Logo" className="h-12 w-12 rounded-full border border-gray-300" />
+            <div className="flex flex-col">
+              <span className="font-bold text-2xl text-black leading-tight">GiHomArts &amp; Cultours Ltd</span>
+              <span className="text-base text-gray-500 font-normal -mt-1">My Heritage Today &amp; Tomorrow</span>
+            </div>
+          </div>
+          {/* Navigation Links */}
+          <nav className="flex gap-6 items-center">
+            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
+            <a href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition">Products</a>
+            <a href="/programs" className="text-gray-700 hover:text-blue-600 font-medium transition">Programs</a>
+            <a href="/booking" className="text-gray-700 hover:text-blue-600 font-medium transition">Booking</a>
+            <a href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition">Contact</a>
+          </nav>
+        </div>
+      </header>
+      <div className="h-24"></div> {/* Spacer for fixed header */}
+
+      {/* Spacer for fixed nav */}
+      <div className="h-16" />
 
       {/* Header */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-700 py-16 px-4 text-white">
+      <section className="w-full bg-gradient-to-r from-blue-600 to-purple-700 py-16 px-4 text-white shadow-lg">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Plan Your Perfect Trip</h1>
           <p className="text-xl text-blue-100">
@@ -172,217 +196,217 @@ export default function BookingPage() {
         </div>
       </section>
 
-      {/* Products & Programs Section */}
-      <div className="py-12 px-4">
-        <div className="max-w-4xl mx-auto mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-center">Available Services & Programs</h2>
-          <div className="grid md:grid-cols-2 gap-8 mb-8">
-            {/* Core Services and DB Products */}
-            {[...coreServices, ...filteredProducts].map((item: any, idx) => (
-              <div key={item._id || item.name} className="border rounded-lg p-4 bg-white shadow">
-                <div className="flex items-center gap-4 mb-2">
-                  {item.image && (
-                    <img src={item.image} alt={item.name} className="w-32 h-32 object-cover rounded-xl border border-gray-200 shadow-md" />
-                  )}
-                  <div>
-                    <div className="font-bold text-lg">{item.name}</div>
-                    {item.price && (
-                      <div className="text-orange-600 font-semibold">${item.price}</div>
+      {/* Main Content */}
+      <main className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8 py-12 px-4">
+        {/* Products & Programs Section */}
+        <section className="lg:col-span-2">
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold mb-6 text-center">Available Services & Programs</h2>
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {[...coreServices, ...filteredProducts].map((item: any, idx) => (
+                <div key={item._id || item.name} className="border rounded-xl p-4 bg-white shadow hover:shadow-lg transition-all duration-200">
+                  <div className="flex items-center gap-4 mb-2">
+                    {item.image && (
+                      <img src={item.image} alt={item.name} className="w-32 h-32 object-cover rounded-xl border border-gray-200 shadow-md" />
                     )}
+                    <div>
+                      <div className="font-bold text-lg">{item.name}</div>
+                      {item.price && (
+                        <div className="text-orange-600 font-semibold">${item.price}</div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="text-gray-700 mb-1">{item.description}</div>
-                {item.price && (
-                  <div className="text-sm text-blue-700 font-medium">To pay, use MoMo +250 788 440 243</div>
-                )}
-                <div className="flex gap-2 mt-2">
-                  <Button variant="secondary" onClick={() => setViewProduct(item)}>
-                    View Details
-                  </Button>
-                  <Button
-                    variant="default"
-                    onClick={() => {
-                      setSelectedProducts(prev => {
-                        if (prev.some(p => p.name === item.name)) return prev;
-                        toast({ title: "Added to Booking", description: `${item.name} has been added to your booking.` });
-                        return [...prev, item];
-                      });
-                    }}
-                  >
-                    Add to Booking
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-          {/* Programs */}
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-4">Programs</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              {programs.map((program: any) => (
-                <div key={program._id} className="border rounded-lg p-4 bg-white shadow">
-                  <div className="font-bold text-lg mb-1">{program.name}</div>
-                  <div className="text-gray-700 mb-1">{program.description}</div>
-                  {program.schedule && (
-                    <div className="text-sm text-blue-700 font-medium">Schedule: {program.schedule}</div>
+                  <div className="text-gray-700 mb-1">{item.description}</div>
+                  {item.price && (
+                    <div className="text-sm text-blue-700 font-medium">To pay, use MoMo +250 788 440 243</div>
                   )}
+                  <div className="flex gap-2 mt-2">
+                    <Button variant="secondary" onClick={() => setViewProduct(item)}>
+                      View Details
+                    </Button>
+                    <Button
+                      variant="default"
+                      onClick={() => {
+                        setSelectedProducts(prev => {
+                          if (prev.some(p => p.name === item.name)) return prev;
+                          toast({ title: "Added to Booking", description: `${item.name} has been added to your booking.` });
+                          return [...prev, item];
+                        });
+                      }}
+                    >
+                      Add to Booking
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
+            {/* Programs */}
+            <div className="mb-8">
+              <h3 className="text-xl font-bold mb-4">Programs</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                {programs.map((program: any) => (
+                  <div key={program._id} className="border rounded-xl p-4 bg-white shadow hover:shadow-lg transition-all duration-200">
+                    <div className="font-bold text-lg mb-1">{program.name}</div>
+                    <div className="text-gray-700 mb-1">{program.description}</div>
+                    {program.schedule && (
+                      <div className="text-sm text-blue-700 font-medium">Schedule: {program.schedule}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Booking Form */}
-      <div className="lg:col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Book Your Adventure</CardTitle>
-            <CardDescription>
-              Fill out the form below and our travel experts will get back to you with a customized quote
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Personal Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Personal Information</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" placeholder="John" required />
+          {/* Booking Form */}
+          <Card className="shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-2xl">Book Your Adventure</CardTitle>
+              <CardDescription>
+                Fill out the form below and our travel experts will get back to you with a customized quote
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Personal Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Personal Information</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input id="firstName" placeholder="John" required />
+                    </div>
+                    <div>
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input id="lastName" placeholder="Doe" required />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" placeholder="Doe" required />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" placeholder="john@example.com" required />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" required />
+                    </div>
                   </div>
                 </div>
-                <div className="grid md:grid-cols-2 gap-4">
+
+                {/* Trip Details */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Trip Details</h3>
                   <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="john@example.com" required />
+                    <Label htmlFor="residence">Customer Residence</Label>
+                    <Select>
+                      <SelectTrigger data-field="residence" data-value="">
+                        <SelectValue placeholder="Select residence region" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="rwanda" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "rwanda")}>Rwanda</SelectItem>
+                        <SelectItem value="east-africa" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "east-africa")}>East Africa</SelectItem>
+                        <SelectItem value="africa" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "africa")}>Rest of Africa</SelectItem>
+                        <SelectItem value="europe" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "europe")}>Europe</SelectItem>
+                        <SelectItem value="asia" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "asia")}>Asia</SelectItem>
+                        <SelectItem value="americas" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "americas")}>Americas</SelectItem>
+                        <SelectItem value="oceania" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "oceania")}>Oceania</SelectItem>
+                        <SelectItem value="other" onClick={(e: any) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "other")}>Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+                  {/* Selected Products */}
+                  {selectedProducts.length > 0 && (
+                    <div className="mb-4">
+                      <h4 className="font-semibold mb-2">Selected Products</h4>
+                      <ul className="list-disc pl-5">
+                        {selectedProducts.map((prod, i) => (
+                          <li key={prod._id || prod.name} className="mb-1 flex justify-between items-center">
+                            <span>{prod.name} {prod.price ? `($${prod.price})` : ''}</span>
+                            <Button size="sm" variant="destructive" onClick={() => setSelectedProducts(selectedProducts.filter(p => p.name !== prod.name))}>Remove</Button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Additional Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Booking cost 20$ ON 0788 440 243</h3>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Additional Information</h3>
                   <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" required />
+                    <Label htmlFor="comments">Special Requests or Comments</Label>
+                    <Textarea
+                      id="comments"
+                      placeholder="Tell us about any special requirements, interests, or questions you have..."
+                      rows={4}
+                    />
                   </div>
                 </div>
-              </div>
 
-              {/* Trip Details */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Trip Details</h3>
+                <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+                  {submitting ? "Submitting..." : "Submit Booking Request"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Sidebar */}
+        <aside className="space-y-6">
+          {/* Contact Info */}
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle>Need Help?</CardTitle>
+              <CardDescription>Our travel experts are here to assist you</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-blue-600" />
                 <div>
-                  <Label htmlFor="residence">Customer Residence</Label>
-                  <Select>
-                    <SelectTrigger data-field="residence" data-value="">
-                      <SelectValue placeholder="Select residence region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="rwanda" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "rwanda")}>Rwanda</SelectItem>
-                      <SelectItem value="east-africa" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "east-africa")}>East Africa</SelectItem>
-                      <SelectItem value="africa" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "africa")}>Rest of Africa</SelectItem>
-                      <SelectItem value="europe" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "europe")}>Europe</SelectItem>
-                      <SelectItem value="asia" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "asia")}>Asia</SelectItem>
-                      <SelectItem value="americas" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "americas")}>Americas</SelectItem>
-                      <SelectItem value="oceania" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "oceania")}>Oceania</SelectItem>
-                      <SelectItem value="other" onClick={(e) => (e.currentTarget.parentElement?.previousElementSibling as HTMLElement | null)?.setAttribute("data-value", "other")}>Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <p className="font-medium">Call Us</p>
+                  <p className="text-sm text-muted-foreground">+250788 440 243</p>
                 </div>
-                {/* Selected Products */}
-                {selectedProducts.length > 0 && (
-                  <div className="mb-4">
-                    <h4 className="font-semibold mb-2">Selected Products</h4>
-                    <ul className="list-disc pl-5">
-                      {selectedProducts.map((prod, i) => (
-                        <li key={prod._id || prod.name} className="mb-1 flex justify-between items-center">
-                          <span>{prod.name} {prod.price ? `($${prod.price})` : ''}</span>
-                          <Button size="sm" variant="destructive" onClick={() => setSelectedProducts(selectedProducts.filter(p => p.name !== prod.name))}>Remove</Button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
-
-              {/* Additional Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Booking cost 20$ ON 0788 440 243</h3>
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Additional Information</h3>
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-blue-600" />
                 <div>
-                  <Label htmlFor="comments">Special Requests or Comments</Label>
-                  <Textarea
-                    id="comments"
-                    placeholder="Tell us about any special requirements, interests, or questions you have..."
-                    rows={4}
-                  />
+                  <p className="font-medium">Email Us</p>
+                  <p className="text-sm text-muted-foreground">gihomart@250gmail.com</p>
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
-              <Button type="submit" className="w-full" size="lg" disabled={submitting}>
-                {submitting ? "Submitting..." : "Submit Booking Request"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Sidebar */}
-      <div className="space-y-6">
-        {/* Contact Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Need Help?</CardTitle>
-            <CardDescription>Our travel experts are here to assist you</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Phone className="w-5 h-5 text-blue-600" />
-              <div>
-                <p className="font-medium">Call Us</p>
-                <p className="text-sm text-muted-foreground">+250788 440 243</p>
+          {/* Why Choose Us */}
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle>Why Choose WanderLust?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">Expert local guides and personalized itineraries</p>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Mail className="w-5 h-5 text-blue-600" />
-              <div>
-                <p className="font-medium">Email Us</p>
-                <p className="text-sm text-muted-foreground">gihomart@250gmail.com
-                </p>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">24/7 customer support during your trip</p>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">Best price guarantee and flexible cancellation</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">Sustainable and responsible travel practices</p>
+              </div>
+            </CardContent>
+          </Card>
+        </aside>
+      </main>
 
-        {/* Why Choose Us */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Why Choose WanderLust?</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
-              <p className="text-sm">Expert local guides and personalized itineraries</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
-              <p className="text-sm">24/7 customer support during your trip</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
-              <p className="text-sm">Best price guarantee and flexible cancellation</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
-              <p className="text-sm">Sustainable and responsible travel practices</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
+      {/* Product Modal */}
       {viewProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">

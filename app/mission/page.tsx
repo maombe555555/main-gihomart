@@ -28,8 +28,30 @@ export default function MissionPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+      {/* Well-arranged Header Navigation Bar */}
+      <header className="w-full fixed top-0 left-0 z-50 bg-white shadow border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
+          {/* Logo and Brand Block */}
+          <div className="flex items-center gap-4">
+            <img src="/images/logooo.jpg" alt="GiHomArts & Cultours Ltd Logo" className="h-12 w-12 rounded-full border border-gray-300" />
+            <div className="flex flex-col">
+              <span className="font-bold text-2xl text-black leading-tight">GiHomArts &amp; Cultours Ltd</span>
+              <span className="text-base text-gray-500 font-normal -mt-1">My Heritage Today &amp; Tomorrow</span>
+            </div>
+          </div>
+          {/* Navigation Links */}
+          <nav className="flex gap-6 items-center">
+            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
+            <a href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition">Products</a>
+            <a href="/programs" className="text-gray-700 hover:text-blue-600 font-medium transition">Programs</a>
+            <a href="/booking" className="text-gray-700 hover:text-blue-600 font-medium transition">Booking</a>
+            <a href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition">Contact</a>
+          </nav>
+        </div>
+      </header>
+      {/* Spacer for fixed nav */}
+      <div className="h-16" />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-orange-600 to-red-700 py-16 px-4 text-white">
