@@ -67,14 +67,14 @@ export default function BookingPage() {
       name: "MOUNTAIN BIKING",
       description:
         "Embark on adrenaline-pumping mountain biking adventures through Huye mountains. Explore rugged trails, picturesque villages, and breathtaking viewpoints with our experienced guides.",
-      image: "/images/mountain biking.png",
+      image: "/images/mb.jpg",
       price: 25,
     },
     {
       name: "COFFEE EXPERIENCE",
       description:
         "Delve into Rwanda's rich coffee culture with our immersive coffee experience. Discover the journey from bean to cup and savor the flavors of this beloved brew amidst stunning natural surroundings.",
-      image: "/images/mb.jpg",
+      image: "/images/coffee.jpg",
       price: 25,
     },
     {
