@@ -49,7 +49,7 @@ export default function ProductsPage() {
       name: "RWANDAN CUISINE EXPERIENCE",
       description:
         "Join us for a culinary journey through Rwanda's traditional cuisine. Learn to prepare authentic dishes using locally sourced ingredients and traditional cooking methods, and savor the flavors of our rich culinary heritage.",
-      image: "/images/Rwandan cuisine.png",
+      image: "/images/rwandan cuisine.png",
       price: 25,
     },
     {
