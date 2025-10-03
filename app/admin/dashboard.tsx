@@ -38,7 +38,7 @@ export default function AdminDashboard() {
 
     if (res.ok) {
       toast({
-        title: "✅ Success",
+        title: "Success",
         description: `${type} added successfully!`,
       });
       setForm({
@@ -51,29 +51,29 @@ export default function AdminDashboard() {
       });
     } else {
       toast({
-        title: "❌ Error",
+        title: "Error",
         description: `Failed to add ${type}.`,
       });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      <Card className="w-full max-w-xl shadow-lg border border-gray-200 rounded-2xl">
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <Card className="w-full max-w-xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-indigo-700">
+          <CardTitle>
             Add New {type.charAt(0).toUpperCase() + type.slice(1)}
           </CardTitle>
         </CardHeader>
 
         <CardContent>
           <div className="mb-4 flex items-center justify-center">
-            <label className="font-semibold mr-3 text-gray-700">Type:</label>
+            <label className="mr-2">Type:</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
               name="type"
-              className="border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+              className="border rounded px-2 py-1"
             >
               <option value="product">Product</option>
               <option value="program">Program</option>
@@ -81,14 +81,13 @@ export default function AdminDashboard() {
             </select>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <Input
               name="name"
               value={form.name}
               onChange={handleChange}
               placeholder="Name"
               required
-              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
             />
             <Textarea
               name="description"
@@ -96,14 +95,12 @@ export default function AdminDashboard() {
               onChange={handleChange}
               placeholder="Description"
               required
-              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
             />
             <Input
               name="image"
               value={form.image}
               onChange={handleChange}
               placeholder="Image URL"
-              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
             />
             {type === "product" && (
               <Input
@@ -111,7 +108,6 @@ export default function AdminDashboard() {
                 value={form.price}
                 onChange={handleChange}
                 placeholder="Price"
-                className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
               />
             )}
             {type === "program" && (
@@ -120,7 +116,6 @@ export default function AdminDashboard() {
                 value={form.schedule}
                 onChange={handleChange}
                 placeholder="Schedule"
-                className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
               />
             )}
             {type === "documentation" && (
@@ -129,14 +124,10 @@ export default function AdminDashboard() {
                 value={form.content}
                 onChange={handleChange}
                 placeholder="Full Content"
-                className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
               />
             )}
 
-            <Button
-              type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-xl shadow-md"
-            >
+            <Button type="submit" className="w-full">
               Add {type.charAt(0).toUpperCase() + type.slice(1)}
             </Button>
           </form>
