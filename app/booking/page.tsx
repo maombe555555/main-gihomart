@@ -84,7 +84,7 @@ export default function BookingPage() {
         }
       }
     }
-  }, [programs])
+  }, )
 
   useEffect(() => {
     fetch("/api/products")
