@@ -61,7 +61,7 @@ export default function BookingPage() {
       name: "RWANDAN CUISINE",
       description:
         "Join us for a culinary journey through Rwanda's traditional cuisine. Learn to prepare authentic dishes using locally sourced ingredients and traditional cooking methods, and savor the flavors of our rich culinary heritage.",
-      image: "/images/rwandan cuisine.png",
+      image: "/images/Rwandan cuisine.png",
       price: 25,
     },
   ]
@@ -153,7 +153,7 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center">
-      {/* Header Navigation */}
+      {/* Header */}
       <header className="w-full fixed top-0 left-0 z-50 bg-white shadow border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-3 flex items-center justify-between flex-wrap">
           <div className="flex items-center gap-4">
@@ -177,9 +177,9 @@ export default function BookingPage() {
         </div>
       </header>
 
-      <div className="h-24" /> {/* Spacer for fixed header */}
+      <div className="h-24" /> {/* Spacer */}
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="w-full bg-gradient-to-r from-blue-600 to-purple-700 py-16 px-4 md:px-6 lg:px-8 text-white shadow-lg">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Plan Your Perfect Trip</h1>
@@ -200,7 +200,6 @@ export default function BookingPage() {
                   key={item._id || item.name}
                   className="border rounded-xl p-4 bg-white shadow hover:shadow-lg transition-all duration-200 flex flex-col gap-4"
                 >
-                  {/* Image */}
                   {item.image && (
                     <img
                       src={item.image}
@@ -208,22 +207,14 @@ export default function BookingPage() {
                       className="w-full h-64 md:h-72 object-cover rounded-xl border border-gray-200 shadow-md"
                     />
                   )}
-
-                  {/* Name & Price */}
                   <div className="flex justify-between items-center">
                     <div className="font-bold text-lg">{item.name}</div>
                     {item.price && <div className="text-orange-600 font-semibold">${item.price}</div>}
                   </div>
-
-                  {/* Description */}
                   <div className="text-gray-700">{item.description}</div>
-
-                  {/* Payment Info */}
                   {item.price && (
                     <div className="text-sm text-blue-700 font-medium">To pay, use MoMo +250 788 440 243</div>
                   )}
-
-                  {/* Action Buttons */}
                   <div className="flex gap-2 flex-wrap">
                     <Button variant="secondary" onClick={() => setViewProduct(item)}>View Details</Button>
                     <Button
@@ -266,15 +257,174 @@ export default function BookingPage() {
           </div>
 
           {/* Booking Form */}
-          {/* ...same as previous organized form... */}
+          <Card className="shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-2xl">Book Your Adventure</CardTitle>
+              <CardDescription>Fill out the form below and our travel experts will get back to you with a customized quote</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Personal Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Personal Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input id="firstName" placeholder="John" required />
+                    </div>
+                    <div>
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input id="lastName" placeholder="Doe" required />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" placeholder="john@example.com" required />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" required />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Trip Details */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Trip Details</h3>
+                  <div>
+                    <Label htmlFor="residence">Customer Residence</Label>
+                    <Select>
+                      <SelectTrigger data-field="residence" data-value="">
+                        <SelectValue placeholder="Select residence region" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="rwanda">Rwanda</SelectItem>
+                        <SelectItem value="east-africa">East Africa</SelectItem>
+                        <SelectItem value="africa">Rest of Africa</SelectItem>
+                        <SelectItem value="europe">Europe</SelectItem>
+                        <SelectItem value="asia">Asia</SelectItem>
+                        <SelectItem value="americas">Americas</SelectItem>
+                        <SelectItem value="oceania">Oceania</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Selected Products */}
+                  {selectedProducts.length > 0 && (
+                    <div className="mb-4">
+                      <h4 className="font-semibold mb-2">Selected Products</h4>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {selectedProducts.map((prod, i) => (
+                          <li key={prod._id || prod.name} className="flex justify-between items-center flex-wrap gap-2">
+                            <span>{prod.name} {prod.price ? `($${prod.price})` : ''}</span>
+                            <Button size="sm" variant="destructive" onClick={() => setSelectedProducts(selectedProducts.filter(p => p.name !== prod.name))}>Remove</Button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Additional Info */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Booking cost 20$ ON 0788 440 243</h3>
+                  <h3 className="text-lg font-semibold">Additional Information</h3>
+                  <div>
+                    <Label htmlFor="comments">Special Requests or Comments</Label>
+                    <Textarea id="comments" placeholder="Tell us about any special requirements, interests, or questions..." rows={4} />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full" size="lg" disabled={submitting}>
+                  {submitting ? "Submitting..." : "Submit Booking Request"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </section>
 
         {/* Sidebar */}
-        {/* ...same as previous organized sidebar... */}
+        <aside className="space-y-6">
+          {/* Contact Info */}
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle>Need Help?</CardTitle>
+              <CardDescription>Our travel experts are here to assist you</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-blue-600" />
+                <div>
+                  <p className="font-medium">Call Us</p>
+                  <p className="text-sm text-muted-foreground">+250788 440 243</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-blue-600" />
+                <div>
+                  <p className="font-medium">Email Us</p>
+                  <p className="text-sm text-muted-foreground">gihomart@250gmail.com</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Why Choose Us */}
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle>Why Choose WanderLust?</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">Expert local guides and personalized itineraries</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">24/7 customer support during your trip</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">Best price guarantee and flexible cancellation</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                <p className="text-sm">Sustainable and responsible travel practices</p>
+              </div>
+            </CardContent>
+          </Card>
+        </aside>
       </main>
 
       {/* Product Modal */}
-      {/* ...same as previous modal... */}
+      {viewProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
+            <h2 className="text-xl font-bold mb-2">{viewProduct.name}</h2>
+            {viewProduct.image && (
+              <img src={viewProduct.image} alt={viewProduct.name} className="w-full h-64 md:h-72 object-cover rounded-xl border border-gray-200 shadow mb-2" />
+            )}
+            <div className="mb-2">{viewProduct.description}</div>
+            {viewProduct.price && <div className="text-orange-600 font-semibold mb-2">${viewProduct.price}</div>}
+            <Button
+              variant="default"
+              className="mr-2 mb-2"
+              onClick={() => {
+                setSelectedProducts(prev => {
+                  if (prev.some(p => p.name === viewProduct.name)) return prev
+                  toast({ title: "Added to Booking", description: `${viewProduct.name} has been added to your booking.` })
+                  return [...prev, viewProduct]
+                })
+              }}
+            >
+              Add to Booking
+            </Button>
+            <Button variant="secondary" onClick={() => setViewProduct(null)}>Close</Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
