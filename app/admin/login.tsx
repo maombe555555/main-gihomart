@@ -6,20 +6,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, Lock, Mail, Eye, EyeOff } from "lucide-react"
-
-const ADMIN_EMAIL = "maseemmy200@gmail.com"
-const ADMIN_PASSWORD = "MMAsee22&*"
+import { Loader2, Lock, Mail } from "lucide-react"
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
 
-  // Check if already logged in
+  const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL
+  const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+
   useEffect(() => {
     if (typeof window !== "undefined" && localStorage.getItem("isAdmin") === "true") {
       router.push("/admin")
@@ -31,7 +29,6 @@ export default function AdminLogin() {
     setIsLoading(true)
     setError("")
 
-    // Simulate API call delay
     setTimeout(() => {
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
         localStorage.setItem("isAdmin", "true")
@@ -57,7 +54,7 @@ export default function AdminLogin() {
             Access the tourism website administration panel
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
           {error && (
             <Alert variant="destructive">
@@ -93,28 +90,14 @@ export default function AdminLogin() {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type="password"
                   placeholder="Enter your password"
-                  className="pl-10 pr-10"
+                  className="pl-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
                   required
                 />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                  disabled={isLoading}
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4 text-gray-400" />
-                  ) : (
-                    <Eye className="w-4 h-4 text-gray-400" />
-                  )}
-                </Button>
               </div>
             </div>
 
@@ -133,15 +116,8 @@ export default function AdminLogin() {
               )}
             </Button>
           </form>
-
-          <div className="text-center text-sm text-gray-500">
-            <p>Demo Credentials:</p>
-            <p className="font-mono text-xs mt-1">
-              Email: {ADMIN_EMAIL}
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
   )
-} 
+}
