@@ -8,9 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, Lock, Mail, Eye, EyeOff } from "lucide-react"
 
-const ADMIN_EMAIL = "maseemmy200@gmail.com"
-const ADMIN_PASSWORD = "MMAsee22&*"
-
 export default function AdminLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -19,30 +16,39 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
 
-  // Check if already logged in
   useEffect(() => {
     if (typeof window !== "undefined" && localStorage.getItem("isAdmin") === "true") {
       router.push("/admin")
     }
   }, [router])
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setIsLoading(true)
     setError("")
 
-    // Simulate API call delay
-    setTimeout(() => {
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
         localStorage.setItem("isAdmin", "true")
         localStorage.setItem("adminEmail", email)
         localStorage.setItem("loginTime", new Date().toISOString())
         router.push("/admin")
       } else {
-        setError("Invalid credentials. Please check your email and password.")
+        setError(data.error || "Invalid credentials")
         setIsLoading(false)
       }
-    }, 1000)
+    } catch (err) {
+      setError("Something went wrong. Please try again.")
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -57,7 +63,7 @@ export default function AdminLogin() {
             Access the tourism website administration panel
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
           {error && (
             <Alert variant="destructive">
@@ -66,10 +72,9 @@ export default function AdminLogin() {
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                Email Address
-              </Label>
+              <Label htmlFor="email">Email Address</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -85,10 +90,9 @@ export default function AdminLogin() {
               </div>
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-                Password
-              </Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -118,8 +122,9 @@ export default function AdminLogin() {
               </div>
             </div>
 
-            <Button 
-              type="submit" 
+            {/* Submit */}
+            <Button
+              type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2"
               disabled={isLoading}
             >
@@ -137,4 +142,4 @@ export default function AdminLogin() {
       </Card>
     </div>
   )
-} 
+}
