@@ -155,7 +155,7 @@ export default function BookingPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center">
       {/* Header Navigation */}
       <header className="w-full fixed top-0 left-0 z-50 bg-white shadow border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-2 flex items-center justify-between flex-wrap">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-3 flex items-center justify-between flex-wrap">
           <div className="flex items-center gap-4">
             <img
               src="/images/logooo.jpg"
@@ -164,9 +164,7 @@ export default function BookingPage() {
             />
             <div className="flex flex-col">
               <span className="font-bold text-2xl text-black leading-tight">GiHomArts &amp; Cultours Ltd</span>
-              <span className="text-base text-gray-500 font-normal -mt-1">
-                My Heritage Today &amp; Tomorrow
-              </span>
+              <span className="text-base text-gray-500 font-normal -mt-1">My Heritage Today &amp; Tomorrow</span>
             </div>
           </div>
           <nav className="flex gap-4 sm:gap-6 items-center flex-wrap mt-2 sm:mt-0">
@@ -185,19 +183,18 @@ export default function BookingPage() {
       <section className="w-full bg-gradient-to-r from-blue-600 to-purple-700 py-16 px-4 md:px-6 lg:px-8 text-white shadow-lg">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Plan Your Perfect Trip</h1>
-          <p className="text-xl text-blue-100">
-            Tell us about your dream destination and we'll create a personalized itinerary for you
-          </p>
+          <p className="text-xl text-blue-100">Tell us about your dream destination and we'll create a personalized itinerary for you</p>
         </div>
       </section>
 
       {/* Main Content */}
       <main className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8 py-12 px-4 md:px-6 lg:px-8">
         {/* Products & Programs */}
-        <section className="lg:col-span-2">
-          <div className="mb-12">
+        <section className="lg:col-span-2 space-y-12">
+          {/* Services */}
+          <div>
             <h2 className="text-2xl font-bold mb-6 text-center">Available Services & Programs</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 md:gap-8 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[...coreServices, ...filteredProducts].map((item: any) => (
                 <div
                   key={item._id || item.name}
@@ -213,15 +210,11 @@ export default function BookingPage() {
                   <div className="flex flex-col justify-between flex-1">
                     <div>
                       <div className="font-bold text-lg">{item.name}</div>
-                      {item.price && <div className="text-orange-600 font-semibold">${item.price}</div>}
-                      <div className="text-gray-700 mt-1">{item.description}</div>
-                      {item.price && (
-                        <div className="text-sm text-blue-700 font-medium mt-1">
-                          To pay, use MoMo +250 788 440 243
-                        </div>
-                      )}
+                      {item.price && <div className="text-orange-600 font-semibold mt-1">${item.price}</div>}
+                      <div className="text-gray-700 mt-2">{item.description}</div>
+                      {item.price && <div className="text-sm text-blue-700 font-medium mt-2">To pay, use MoMo +250 788 440 243</div>}
                     </div>
-                    <div className="flex gap-2 mt-3 sm:mt-2 flex-wrap">
+                    <div className="flex gap-2 mt-4 sm:mt-2 flex-wrap">
                       <Button variant="secondary" onClick={() => setViewProduct(item)}>View Details</Button>
                       <Button
                         variant="default"
@@ -240,33 +233,31 @@ export default function BookingPage() {
                 </div>
               ))}
             </div>
+          </div>
 
-            {/* Programs */}
-            <div className="mb-8">
-              <h3 className="text-xl font-bold mb-4">Programs</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {programs.map((program: any) => (
-                  <div key={program._id} className="border rounded-xl p-4 bg-white shadow hover:shadow-lg transition-all duration-200">
-                    <div className="font-bold text-lg mb-1">{program.name}</div>
-                    <div className="text-gray-700 mb-1">{program.description}</div>
-                    {program.schedule && <div className="text-sm text-blue-700 font-medium">Schedule: {program.schedule}</div>}
-                  </div>
-                ))}
-              </div>
+          {/* Programs */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Programs</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {programs.map((program: any) => (
+                <div key={program._id} className="border rounded-xl p-4 bg-white shadow hover:shadow-lg transition-all duration-200">
+                  <div className="font-bold text-lg mb-1">{program.name}</div>
+                  <div className="text-gray-700 mb-1">{program.description}</div>
+                  {program.schedule && <div className="text-sm text-blue-700 font-medium">Schedule: {program.schedule}</div>}
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Booking Form */}
-          <Card className="shadow-xl w-full">
+          <Card className="shadow-xl">
             <CardHeader>
               <CardTitle className="text-2xl">Book Your Adventure</CardTitle>
-              <CardDescription>
-                Fill out the form below and our travel experts will get back to you with a customized quote
-              </CardDescription>
+              <CardDescription>Fill out the form below and our travel experts will get back to you with a customized quote</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Personal Info */}
+                {/* Personal Information */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Personal Information</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -313,19 +304,15 @@ export default function BookingPage() {
                     </Select>
                   </div>
 
+                  {/* Selected Products */}
                   {selectedProducts.length > 0 && (
                     <div className="mb-4">
                       <h4 className="font-semibold mb-2">Selected Products</h4>
-                      <ul className="list-disc pl-5">
+                      <ul className="list-disc pl-5 space-y-1">
                         {selectedProducts.map((prod, i) => (
-                          <li
-                            key={prod._id || prod.name}
-                            className="mb-1 flex justify-between items-center flex-wrap"
-                          >
+                          <li key={prod._id || prod.name} className="flex justify-between items-center flex-wrap gap-2">
                             <span>{prod.name} {prod.price ? `($${prod.price})` : ''}</span>
-                            <Button size="sm" variant="destructive" onClick={() => setSelectedProducts(selectedProducts.filter(p => p.name !== prod.name))}>
-                              Remove
-                            </Button>
+                            <Button size="sm" variant="destructive" onClick={() => setSelectedProducts(selectedProducts.filter(p => p.name !== prod.name))}>Remove</Button>
                           </li>
                         ))}
                       </ul>
@@ -336,12 +323,10 @@ export default function BookingPage() {
                 {/* Additional Info */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Booking cost 20$ ON 0788 440 243</h3>
-                </div>
-                <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Additional Information</h3>
                   <div>
                     <Label htmlFor="comments">Special Requests or Comments</Label>
-                    <Textarea id="comments" placeholder="Tell us about any special requirements..." rows={4} />
+                    <Textarea id="comments" placeholder="Tell us about any special requirements, interests, or questions..." rows={4} />
                   </div>
                 </div>
 
@@ -389,7 +374,7 @@ export default function BookingPage() {
                 "Expert local guides and personalized itineraries",
                 "24/7 customer support during your trip",
                 "Best price guarantee and flexible cancellation",
-                "Sustainable and responsible travel practices",
+                "Sustainable and responsible travel practices"
               ].map((text, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
@@ -410,19 +395,13 @@ export default function BookingPage() {
             <div className="mb-2">{viewProduct.description}</div>
             {viewProduct.price && <div className="text-orange-600 font-semibold mb-2">${viewProduct.price}</div>}
             <div className="flex flex-wrap gap-2">
-              <Button
-                variant="default"
-                className="mr-2"
-                onClick={() => {
-                  setSelectedProducts(prev => {
-                    if (prev.some(p => p.name === viewProduct.name)) return prev
-                    toast({ title: "Added to Booking", description: `${viewProduct.name} has been added to your booking.` })
-                    return [...prev, viewProduct]
-                  })
-                }}
-              >
-                Add to Booking
-              </Button>
+              <Button variant="default" className="mr-2" onClick={() => {
+                setSelectedProducts(prev => {
+                  if (prev.some(p => p.name === viewProduct.name)) return prev
+                  toast({ title: "Added to Booking", description: `${viewProduct.name} has been added to your booking.` })
+                  return [...prev, viewProduct]
+                })
+              }}>Add to Booking</Button>
               <Button variant="secondary" onClick={() => setViewProduct(null)}>Close</Button>
             </div>
           </div>
