@@ -21,4 +21,17 @@ export async function POST(req: Request) {
   } catch (error) {
     return NextResponse.json({ error: "Failed to create product" }, { status: 500 })
   }
+} 
+export async function DELETE(req: Request) {
+  try {
+    await dbConnect()
+    const { id } = await req.json()
+    const deletedProduct = await Product.findByIdAndDelete(id)
+    if (!deletedProduct) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+    }
+    return NextResponse.json({ message: "Product deleted successfully" })
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 })
+  }
 }

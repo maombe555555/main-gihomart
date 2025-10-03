@@ -14,6 +14,22 @@ export async function GET() {
     return Response.json({ error: "Failed to fetch users" }, { status: 500 })
   }
 }
+export async function DELETE(req: Request) {
+  if (!process.env.MONGODB_URI) {
+    return Response.json({ error: "Database not configured" }, { status: 503 })
+  }
+  try {
+    await dbConnect()
+    const { id } = await req.json()
+    const deletedUser = await User.findByIdAndDelete(id)
+    if (!deletedUser) {
+      return Response.json({ error: "User not found" }, { status: 404 })
+    }
+    return Response.json({ message: "User deleted successfully" })
+  } catch (error) {
+    return Response.json({ error: "Failed to delete user" }, { status: 500 })
+  }
+}
 
 export async function POST(req: Request) {
   if (!process.env.MONGODB_URI) {
