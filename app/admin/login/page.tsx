@@ -133,13 +133,6 @@ export default function AdminLogin() {
               )}
             </Button>
           </form>
-
-          <div className="text-center text-sm text-gray-500">
-            <p>Demo Credentials:</p>
-            <p className="font-mono text-xs mt-1">
-              Email: {ADMIN_EMAIL}
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>
