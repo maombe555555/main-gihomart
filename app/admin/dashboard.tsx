@@ -58,22 +58,22 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="w-full max-w-xl">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-10">
+      <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
         <CardHeader className="text-center">
-          <CardTitle>
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl font-semibold">
             Add New {type.charAt(0).toUpperCase() + type.slice(1)}
           </CardTitle>
         </CardHeader>
 
         <CardContent>
-          <div className="mb-4 flex items-center justify-center">
-            <label className="mr-2">Type:</label>
+          <div className="mb-4 flex flex-col sm:flex-row items-center sm:justify-center gap-2">
+            <label className="font-medium">Type:</label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
               name="type"
-              className="border rounded px-2 py-1"
+              className="w-full sm:w-auto border rounded px-3 py-2"
             >
               <option value="product">Product</option>
               <option value="program">Program</option>
@@ -81,13 +81,14 @@ export default function AdminDashboard() {
             </select>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               name="name"
               value={form.name}
               onChange={handleChange}
               placeholder="Name"
               required
+              className="w-full"
             />
             <Textarea
               name="description"
@@ -95,12 +96,14 @@ export default function AdminDashboard() {
               onChange={handleChange}
               placeholder="Description"
               required
+              className="w-full"
             />
             <Input
               name="image"
               value={form.image}
               onChange={handleChange}
               placeholder="Image URL"
+              className="w-full"
             />
             {type === "product" && (
               <Input
@@ -108,6 +111,7 @@ export default function AdminDashboard() {
                 value={form.price}
                 onChange={handleChange}
                 placeholder="Price"
+                className="w-full"
               />
             )}
             {type === "program" && (
@@ -116,6 +120,7 @@ export default function AdminDashboard() {
                 value={form.schedule}
                 onChange={handleChange}
                 placeholder="Schedule"
+                className="w-full"
               />
             )}
             {type === "documentation" && (
@@ -124,6 +129,7 @@ export default function AdminDashboard() {
                 value={form.content}
                 onChange={handleChange}
                 placeholder="Full Content"
+                className="w-full"
               />
             )}
 
