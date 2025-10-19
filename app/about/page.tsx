@@ -71,13 +71,14 @@ export default function AboutPage() {
               <Badge className="mb-4 bg-orange-100 text-orange-800">Our Story</Badge>
               <h2 className="text-3xl font-bold mb-4">Connecting Cultures, Preserving Heritage</h2>
               <p className="text-lg text-muted-foreground mb-4">
-                GiHomarts & Cultours Ltd was founded with a simple yet powerful mission: to showcase the incredible beauty, culture, and heritage of Rwanda while supporting local communities through sustainable tourism.
+                Gi HomArts & Cultours Ltd was founded in 2020 by Mr. Kajuga Jerome, a cultural heritage expert and visionary leader, with a mission to preserve Rwanda's rich history and empower local communities. Inspired by the fading legacy of Huye Mountain, once the capital of the Bungwe Kingdom in the 15th century, Mr. Kajuga transformed a passion for heritage into action. What began in 2014 as Mountain Sports Club Ibisumizi evolved into a dynamic tourism initiative that celebrates the legends of King Ruganzu II Ndoli and Nyagakecuru, while protecting the mountain's hidden treasures.
               </p>
               <p className="text-lg text-muted-foreground mb-4">
-                Based in Rwanda's Southern Province, we are more than just a tourism company. We are cultural ambassadors, community advocates, and passionate storytellers who believe that travel should be transformative for both visitors and the communities they encounter.
+                Today, Gi HomArts & Cultours Ltd offers a remarkable cultural experiences that connect visitors with the land, its stories, and its people. From hiking and camping on Huye Mountain to tasting coffee at its source and engaging with local communities, every journey is designed to honor tradition and promote sustainable development. 
               </p>
               <p className="text-lg text-muted-foreground">
-                Our team consists of local experts, cultural historians, and experienced guides who are deeply rooted in Rwandan traditions and committed to sharing authentic experiences with travelers from around the world.
+                Under Mr. Kajuga's leadership as Managing Director and his role at Rwanda's National Commission for UNESCO, the organization remains committed to one purpose: preserving the past, empowering the present, and inspiring.
+                 the future.
               </p>
             </div>
             <div className="relative h-96">
