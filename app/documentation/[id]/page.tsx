@@ -18,7 +18,10 @@ type Article = {
 }
 
 export default async function DocumentationDetailPage({ params }: { params: { id: string } }) {
-  const res = await fetch("http://localhost:3000/api/docs", { cache: "no-store" })
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.gihomart.rw"}/api/docs?id=${params.id}`, {
+  cache: "no-store",
+})
+
 
   if (!res.ok) return notFound()
 
