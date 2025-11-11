@@ -19,15 +19,14 @@ type Article = {
 
 export default async function DocumentationDetailPage({ params }: { params: { id: string } }) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.gihomart.rw"}/api/docs/${params.id}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/docs/${params.id}`,
     { cache: "no-store" }
   )
 
   if (!res.ok) return notFound()
 
   const article: Article = await res.json()
-
-  if (!article) return notFound()
+  if (!article?.title) return notFound()
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">

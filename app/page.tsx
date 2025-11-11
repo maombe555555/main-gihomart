@@ -6,14 +6,66 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Navigation } from "@/components/navigation"
-import { MapPin, Star, Play } from "lucide-react"
+import { MapPin, Star, Play, RotateCw } from "lucide-react" 
 import { useEffect, useState } from "react"
 
 export default function HomePage() {
+  
+  // Define type for your Ad data (Updated back to Video Ad)
+  interface VideoAd {
+    id: number;
+    videoUrl: string;
+    linkUrl: string;
+    title: string;
+  }
+  
   const [products, setProducts] = useState([])
   const [programs, setPrograms] = useState([])
-  const [openModalId, setOpenModalId] = useState<number | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  
+  // State for multiple video ads from the API
+  const [videoAds, setVideoAds] = useState<VideoAd[]>([]);
+  // State to track the currently displayed ad
+  const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  
+  // Define Article type for better clarity
+  interface Article {
+    id: number;
+    title: string;
+    image: string;
+    excerpt: string;
+    fullText: string;
+    readTime: string;
+  }
+  
   useEffect(() => {
+    // --- START OF MOCK VIDEO AD API FETCH ---
+    const fetchAdData = async () => {
+      // NOTE: Replace this with your actual fetch call to your Ads API
+      // Ensure the URLs are embeddable (e.g., YouTube embed format)
+      const mockAds: VideoAd[] = [
+        { id: 1, videoUrl: "https://www.youtube.com/embed/gLgS9Gq8g9o?autoplay=1&mute=1&controls=0", linkUrl: "/ad/video1", title: "Cultural Tour Video Ad" },
+        { id: 2, videoUrl: "https://www.youtube.com/embed/yrqUF9O164U?autoplay=1&mute=1&controls=0", linkUrl: "/ad/video2", title: "Hiking Promotion Video" },
+        { id: 3, videoUrl: "https://www.youtube.com/embed/V9h4P61VwHk?autoplay=1&mute=1&controls=0", linkUrl: "/ad/video3", title: "Rwanda Travel Highlight" },
+      ];
+      setVideoAds(mockAds);
+    };
+    fetchAdData();
+    // --- END OF MOCK VIDEO AD API FETCH ---
+
+    // --- START OF AD ROTATION LOGIC ---
+    // Start rotation only if ads are fetched
+    if (videoAds.length > 0) {
+      const rotationInterval = setInterval(() => {
+        setCurrentAdIndex(prevIndex => (prevIndex + 1) % videoAds.length);
+      }, 5000); // Rotate every 5 seconds
+      
+      // Cleanup interval on component unmount
+      return () => clearInterval(rotationInterval);
+    }
+    // --- END OF AD ROTATION LOGIC ---
+
+    // Fetch primary data (kept for context)
     fetch("/api/products")
       .then(res => res.json())
       .then(setProducts)
@@ -22,7 +74,12 @@ export default function HomePage() {
       .then(res => res.json())
       .then(setPrograms)
       .catch(() => setPrograms([]))
-  }, [])
+  }, [videoAds.length]) 
+
+
+  // Get the currently active ad
+  const currentAd = videoAds[currentAdIndex];
+
 
   const popularTrips = [
     {
@@ -49,7 +106,7 @@ export default function HomePage() {
       image: "/images/RWANDA GOATS.jpg?height=200&width=300",
       price: "$30",
       duration: "6 days",
-  location: "HUYE",
+      location: "HUYE",
       rating: 4.7,
     },
     {
@@ -69,9 +126,9 @@ export default function HomePage() {
       duration: "6 days",
       location: "HUYE",
       rating: 4.7,
-    },  {
+    }, 	{
       id: 6,
-      name: " Heritage and Historical  Tour",
+      name: " Heritage and Historical 	Tour",
       image: "/images/DSC_0027.JPG?height=200&width=300",
       price: "$25",
       duration: "6 days",
@@ -79,7 +136,7 @@ export default function HomePage() {
       rating: 4.7,
     }, ]
 
-  const travelArticles = [
+  const travelArticles: Article[] = [
     {
       id: 1,
       title: "Cycling Through Huye's Hills",
@@ -96,8 +153,8 @@ Cycling in Huye is not just about movement,it’s about immersion. Along the way
       id: 2,
       title: "Traditional Rwandan Culture",
       image: "/images/inzo.jpg?height=200&width=300",
-        excerpt: "Discover the ritual and meaning behind ikigage, Rwanda's traditional sorghum brew.",
-        fullText: `In the heart of Rwanda’s cultural heritage lies ikigage, a traditional sorghum based brew that embodies community, celebration, and ancestral wisdom. More than just a beverage, ikigage represents a ritual of connection between people, generations, and the land itself. Its preparation and consumption are deeply woven into the social fabric of Rwandan life, making it a powerful symbol of identity and unity. Ikigage is typically brewed using sorghum flour (uburo), water, and occasionally honey. The process begins with fermentation in clay pots, where the mixture bubbles and froths, signaling life and readiness. Wooden sticks are used to stir the brew, and the entire setup reflects a rustic, time honored method passed down through generations. The clay pot itself is not just a vessel ,it’s a cultural artifact that preserves temperature, flavor, and tradition. This drink plays a central role in communal gatherings, including weddings, naming ceremonies, harvest celebrations, and rites of passage. It is served with pride and shared among guests as a gesture of hospitality and respect. Brewing ikigage is often accompanied by storytelling, songs, and blessings, turning the act into a communal experience that reinforces social bonds and preserves oral history. For travelers and cultural enthusiasts, engaging with ikigage offers a unique window into Rwandan life. Through community-based tourism initiatives like those offered by Gihomarts, visitors can participate in brewing sessions, learn the symbolism behind each step, and hear firsthand stories from elders who carry the tradition forward. These experiences go beyond observation ,they invite immersion, understanding, and appreciation. In a rapidly modernizing world, traditions like ikigage remind us of the value of heritage and the importance of preserving cultural practices. They offer continuity, identity, and a sense of belonging. For Rwanda, ikigage is not just a drink,it is a living tradition that continues to nourish both body and spirit.`,
+      excerpt: "Discover the ritual and meaning behind ikigage, Rwanda's traditional sorghum brew.",
+      fullText: `In the heart of Rwanda’s cultural heritage lies ikigage, a traditional sorghum based brew that embodies community, celebration, and ancestral wisdom. More than just a beverage, ikigage represents a ritual of connection between people, generations, and the land itself. Its preparation and consumption are deeply woven into the social fabric of Rwandan life, making it a powerful symbol of identity and unity. Ikigage is typically brewed using sorghum flour (uburo), water, and occasionally honey. The process begins with fermentation in clay pots, where the mixture bubbles and froths, signaling life and readiness. Wooden sticks are used to stir the brew, and the entire setup reflects a rustic, time honored method passed down through generations. The clay pot itself is not just a vessel ,it’s a cultural artifact that preserves temperature, flavor, and tradition. This drink plays a central role in communal gatherings, including weddings, naming ceremonies, harvest celebrations, and rites of passage. It is served with pride and shared among guests as a gesture of hospitality and respect. Brewing ikigage is often accompanied by storytelling, songs, and blessings, turning the act into a communal experience that reinforces social bonds and preserves oral history. For travelers and cultural enthusiasts, engaging with ikigage offers a unique window into Rwandan life. Through community-based tourism initiatives like those offered by Gihomarts, visitors can participate in brewing sessions, learn the symbolism behind each step, and hear firsthand stories from elders who carry the tradition forward. These experiences go beyond observation ,they invite immersion, understanding, and appreciation. In a rapidly modernizing world, traditions like ikigage remind us of the value of heritage and the importance of preserving cultural practices. They offer continuity, identity, and a sense of belonging. For Rwanda, ikigage is not just a drink,it is a living tradition that continues to nourish both body and spirit.`,
       readTime: "8 min read",
     }, 
     {
@@ -123,6 +180,14 @@ For those seeking authentic cultural experiences, Huye provides access to commun
     { name: "CNRU", logo: "/placeholder.svg?height=60&width=120" },
     { name: "Travel Partners", logo: "/placeholder.svg?height=60&width=120" },
   ]
+  
+  // Modal handlers
+  const openArticleModal = (article: Article) => {
+      setSelectedArticle(article);
+  };
+  const closeArticleModal = () => {
+      setSelectedArticle(null);
+  };
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -142,6 +207,58 @@ For those seeking authentic cultural experiences, Huye provides access to commun
         </a>
       </div>
       <Navigation />
+
+      {/* --- FIXED VERTICAL PROMOTION (Right Side - ROTATING VIDEO ADS) --- */}
+      {currentAd && (
+        <div className="fixed top-1/2 right-0 transform -translate-y-1/2 z-40 hidden md:block">
+          {/* Padding increased: p-3 is 12px (approx 3px increase from p-1/4px) */}
+          <div className="bg-gray-900 **p-3** rounded-l-lg shadow-2xl flex flex-col items-center space-y-2 border-2 border-orange-600">
+            
+            {/* The Rotating Ad Video */}
+            <Link 
+              key={currentAd.id} // Key forces re-render to load new video iframe content
+              href={currentAd.linkUrl} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="block overflow-hidden rounded-tl-lg rounded-bl-lg"
+            >
+              <div className="w-32 h-64 relative overflow-hidden"> {/* Increased size slightly for better video viewing */}
+                <iframe
+                  src={currentAd.videoUrl} 
+                  title={currentAd.title}
+                  frameBorder="0"
+                  // Ensure autoplay and mute for background fixed ads
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Link>
+            
+            {/* Rotation Button (Manual Skip) */}
+            {videoAds.length > 1 && (
+              <Button 
+                size="icon" 
+                className="bg-orange-600 hover:bg-orange-700 text-white rounded-full"
+                onClick={() => setCurrentAdIndex(prevIndex => (prevIndex + 1) % videoAds.length)}
+                aria-label="Next Video Ad"
+              >
+                <RotateCw className="w-5 h-5 fill-white" />
+              </Button>
+            )}
+            
+            {/* Ad Count Indicator */}
+            {videoAds.length > 1 && (
+              <span className="text-xs text-orange-400">
+                {currentAdIndex + 1} / {videoAds.length}
+              </span>
+            )}
+            
+          </div>
+        </div>
+      )}
+      {/* -------------------------------------------------------- */}
+
 
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center text-white overflow-hidden">
@@ -163,7 +280,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
             Rwanda, we are dedicated to showcasing the rich heritage and natural wonders of our beloved country.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-      
+            
             <Button
               asChild
               size="lg"
@@ -284,12 +401,15 @@ For those seeking authentic cultural experiences, Huye provides access to commun
         </div>
       </section>
 
+   
+      {/* 📣 END OF ADVERTISEMENT BANNER 📣 */}
+
       {/* Amazing Travel Articles */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Amazing Travel Articles</h2>
-           
+            
           </div> <p className="text-lg md:text-xl mb-8 text-black-300 leading-relaxed">
             Our vision is to revolutionize Rwandan commerce by providing a trusted digital marketplace that connects local vendors, artisans, 
             and farmers with a growing community of conscious consumers. We aspire to be a catalyst for inclusive economic growth,where even the smallest entrepreneur has a platform to thrive. Our goal is to empower underserved communities with technology-driven tools that amplify their voices, increase visibility, and foster sustainability. We envision a Rwanda where commerce is no longer limited by geography or infrastructure, but rather fueled by innovation, resilience, and community spirit. Through partnerships, mobile-first solutions, and user-centered design, we strive to build more than just a marketplace.we are building a movement where culture meets commerce, and tradition merges with technology to shape a brighter, more connected future for all.
@@ -309,7 +429,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">{article.readTime}</span>
                     {article.fullText ? (
-                      <Button variant="outline" size="sm" className="border-orange-600 text-orange-600 hover:bg-orange-50" onClick={() => setOpenModalId(article.id)}>
+                      <Button variant="outline" size="sm" className="border-orange-600 text-orange-600 hover:bg-orange-50" onClick={() => openArticleModal(article)}>
                         Read More
                       </Button>
                     ) : (
@@ -321,35 +441,32 @@ For those seeking authentic cultural experiences, Huye provides access to commun
                 </CardContent>
               </Card>
             ))}
-            {/* Modal for fullText */}
-            {travelArticles.map(
-              (article) =>
-                article.fullText && openModalId === article.id ? (
-                  <div
-                    key={article.id}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
-                    onClick={() => setOpenModalId(null)}
+            {/* Modal for fullText - Using conditional rendering here based on selectedArticle */}
+            {selectedArticle && (
+              <div
+                key={selectedArticle.id}
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+                onClick={closeArticleModal}
+              >
+                <div
+                  className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative border border-orange-200"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    className="absolute top-4 right-4 text-gray-400 hover:text-orange-600 text-2xl font-bold focus:outline-none"
+                    aria-label="Close modal"
+                    onClick={closeArticleModal}
                   >
-                    <div
-                      className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative border border-orange-200"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        className="absolute top-4 right-4 text-gray-400 hover:text-orange-600 text-2xl font-bold focus:outline-none"
-                        aria-label="Close modal"
-                        onClick={() => setOpenModalId(null)}
-                      >
-                        ×
-                      </button>
-                      <h3 className="text-3xl font-bold mb-6 text-orange-700 text-center">{article.title}</h3>
-                      <div className="max-h-[60vh] overflow-y-auto pr-2">
-                        <p className="text-gray-800 leading-relaxed whitespace-pre-line text-base md:text-lg">
-                          {article.fullText}
-                        </p>
-                      </div>
-                    </div>
+                    ×
+                  </button>
+                  <h3 className="text-3xl font-bold mb-6 text-orange-700 text-center">{selectedArticle.title}</h3>
+                  <div className="max-h-[60vh] overflow-y-auto pr-2">
+                    <p className="text-gray-800 leading-relaxed whitespace-pre-line text-base md:text-lg">
+                      {selectedArticle.fullText}
+                    </p>
                   </div>
-                ) : null
+                </div>
+              </div>
             )}
           </div>
 
@@ -383,9 +500,9 @@ For those seeking authentic cultural experiences, Huye provides access to commun
       <section className="py-12 px-0 bg-gray-50 w-full">
         <div className="max-w-full mx-auto">
           <h3 className="text-xl font-semibold text-center mb-8 text-muted-foreground">Our Partners</h3>
-          <p className="text-gray-400 mb-4  text-center">
-                Preserving heritage for today and tomorrow through authentic cultural tourism experiences in Rwanda.
-              </p>
+          <p className="text-gray-400 mb-4 	text-center">
+            Preserving heritage for today and tomorrow through authentic cultural tourism experiences in Rwanda.
+          </p>
           <div className="w-full flex flex-wrap justify-center items-center gap-12 md:gap-20 px-2 md:px-8">
             {[
               {
@@ -468,7 +585,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
                     Adventure Tours
                   </Link>
                 </li>
-               
+                
               </ul>
             </div>
 
@@ -478,7 +595,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               <div className="space-y-2 text-gray-400">
                 <p>Southern Province, Rwanda</p>
                 <p>Email: gihomart@250gmail.com</p>
-                <p>Phone: +250  788 440 243</p>
+                <p>Phone: +250 	788 440 243</p>
               </div>
             </div>
 
@@ -510,13 +627,11 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               <a href="https://linkedin.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-blue-700">
                 <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11.75 20h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.25 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/></svg>
               </a>
-              <a href="https://maps.app.goo.gl/XNZYCg1Gi2DB8ei8A?g_st=aw" target="_blank" rel="noopener noreferrer" aria-label="Google Maps" className="hover:text-green-500">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C8.686 2 6 4.686 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.314-2.686-6-6-6zm0 8.5c-1.381 0-2.5-1.119-2.5-2.5S10.619 5.5 12 5.5s2.5 1.119 2.5 2.5S13.381 10.5 12 10.5z"/>
-                </svg>
-              </a>
             </div>
-            <p>&copy; 2025 GiHomarts. All Rights Reserved.</p>
+            
+            <p className="text-sm">
+              &copy; {new Date().getFullYear()} GiHomarts & Cultours Ltd. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

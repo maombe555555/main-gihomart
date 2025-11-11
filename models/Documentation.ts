@@ -1,16 +1,26 @@
-import mongoose from "mongoose"
+import { Schema, model, models } from "mongoose"
 
-const DocumentationSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    author: { type: String, required: true },
-    category: { type: String, required: true },
-    pdfUrl: { type: String }, // optional
-    image: { type: String },  // optional, if you plan to support images later
-    video: { type: String },  // optional, if you plan to support videos later
-  },
-  { timestamps: true }
-)
+export interface DocumentationType {
+  _id: string
+  title: string
+  content: string
+  author: string
+  category: string
+  createdAt?: Date
+  image?: string
+  pdfUrl?: string
+  video?: string
+}
 
-export default mongoose.models.Documentation || mongoose.model("Documentation", DocumentationSchema)
+const DocumentationSchema = new Schema<DocumentationType>({
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  author: String,
+  category: String,
+  createdAt: { type: Date, default: Date.now },
+  image: String,
+  pdfUrl: String,
+  video: String,
+})
+
+export default models.Documentation || model<DocumentationType>("Documentation", DocumentationSchema)
