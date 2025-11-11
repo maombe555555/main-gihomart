@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 export default function AdminDocsPage() {
-  const [docs, setDocs] = useState([])
+  const [docs, setDocs] = useState<any[]>([])   // enforce array type
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [author, setAuthor] = useState("")
@@ -32,7 +32,9 @@ export default function AdminDocsPage() {
         return res.json()
       })
       .then(data => {
-        setDocs(data)
+        // normalize response to always be an array
+        const docsArray = Array.isArray(data) ? data : [data]
+        setDocs(docsArray)
         setTimeout(() => {
           latestDocRef.current?.scrollIntoView({ behavior: "smooth" })
         }, 300)
@@ -151,7 +153,7 @@ export default function AdminDocsPage() {
       {loading && <div>Loading...</div>}
 
       <ul className="space-y-4">
-        {docs.map((doc: any, index: number) => (
+        {Array.isArray(docs) && docs.map((doc: any, index: number) => (
           <li key={doc._id} ref={index === 0 ? latestDocRef : null} className="bg-white p-4 rounded shadow">
             <strong className="block text-lg">{doc.title}</strong>
             <p className="text-gray-700">{doc.content}</p>

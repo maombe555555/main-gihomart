@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Calendar, Clock, User } from "lucide-react"
+import { ArrowLeft, Calendar, User } from "lucide-react"
 
 type Article = {
   _id: string
@@ -12,21 +12,20 @@ type Article = {
   author: string
   category: string
   createdAt?: string
-  imageUrl?: string
+  image?: string
   pdfUrl?: string
-  videoUrl?: string
+  video?: string
 }
 
 export default async function DocumentationDetailPage({ params }: { params: { id: string } }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "https://www.gihomart.rw"}/api/docs?id=${params.id}`, {
-  cache: "no-store",
-})
-
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.gihomart.rw"}/api/docs/${params.id}`,
+    { cache: "no-store" }
+  )
 
   if (!res.ok) return notFound()
 
-  const data: Article[] = await res.json()
-  const article = data.find(doc => doc._id === params.id)
+  const article: Article = await res.json()
 
   if (!article) return notFound()
 
@@ -58,9 +57,9 @@ export default async function DocumentationDetailPage({ params }: { params: { id
       <p className="text-lg leading-relaxed mb-6">{article.content}</p>
 
       {/* Media Previews */}
-      {article.imageUrl && (
+      {article.image && (
         <Image
-          src={article.imageUrl}
+          src={article.image}
           alt="Article image"
           width={800}
           height={400}
@@ -76,12 +75,8 @@ export default async function DocumentationDetailPage({ params }: { params: { id
         />
       )}
 
-      {article.videoUrl && (
-        <video
-          src={article.videoUrl}
-          controls
-          className="w-full rounded border"
-        />
+      {article.video && (
+        <video src={article.video} controls className="w-full rounded border" />
       )}
     </div>
   )

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
+  
 export default function AdminOverview() {
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
@@ -13,6 +13,8 @@ export default function AdminOverview() {
     fetch("/api/products").then(res => res.json()).then(setProducts);
     fetch("/api/programs").then(res => res.json()).then(setPrograms);
     fetch("/api/docs").then(res => res.json()).then(setDocs);
+    fetch("/api/ads").then(res => res.json()).then(setAdvertisements);
+    fetch("/api/contact").then(res => res.json()).then(setContacts);
   }, []);
 
   return (
@@ -48,3 +50,20 @@ export default function AdminOverview() {
     </div>
   );
 }
+function setAdvertisements(value: any) {
+  throw new Error("Function not implemented.");
+}
+function setContacts(value: any): any[] {
+  // Normalize incoming payload to an array of contacts
+  const contacts = Array.isArray(value) ? value : value ? [value] : [];
+
+  // Cache normalized contacts on window for simple debugging/inspection
+  try {
+    (window as any).__gihomart_contacts = contacts;
+  } catch {
+    // ignore if window is not writable (e.g., non-browser env)
+  }
+
+  return contacts;
+}
+

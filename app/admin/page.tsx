@@ -16,6 +16,7 @@ import {
   Plus,
   Eye
 } from "lucide-react"
+import { title } from "process"
 
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -25,11 +26,15 @@ export default function AdminDashboard() {
     docs: number | null,
     products: number | null,
     programs: number | null,
+    ads: number | null, // Added ads property
+    contact: number | null, // Added contact property
   }>({
     users: null,
     docs: null,
     products: null,
     programs: null,
+    ads: null, // Initialize ads
+    contact: null, // Initialize contact
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -53,24 +58,30 @@ export default function AdminDashboard() {
       setLoading(true)
       setError("")
       try {
-        const [usersRes, docsRes, productsRes, programsRes] = await Promise.all([
+        const [usersRes, docsRes, productsRes, programsRes, adsRes, contactRes] = await Promise.all([
           fetch("/api/users"),
-          fetch("/api/docs"),
+          fetch("/api/contact"), // Fetch contact data
           fetch("/api/products"),
           fetch("/api/programs"),
+          fetch("/api/ads"),
+          fetch("/api/contact"), // Fetch contact data
         ])
-        if (!usersRes.ok || !docsRes.ok || !productsRes.ok || !programsRes.ok) {
+        if (!usersRes.ok || !docsRes.ok || !productsRes.ok || !programsRes.ok || !adsRes.ok || !contactRes.ok) {
           throw new Error("Failed to fetch one or more resources.")
         }
-        const users = await usersRes.json()
-        const docs = await docsRes.json()
-        const products = await productsRes.json()
-        const programs = await programsRes.json()
+        const users = await usersRes.json(); // Extract users data
+        const docs = await docsRes.json(); // Extract docs data
+        const products = await productsRes.json(); // Extract products data
+        const programs = await programsRes.json(); // Extract programs data
+        const ads = await adsRes.json(); // Extract ads data
+        const contact = await contactRes.json(); // Extract contact data
         setStats({
           users: Array.isArray(users) ? users.length : 0,
           docs: Array.isArray(docs) ? docs.length : 0,
           products: Array.isArray(products) ? products.length : 0,
           programs: Array.isArray(programs) ? programs.length : 0,
+          ads: Array.isArray(ads) ? ads.length : 0,
+          contact: Array.isArray(contact) ? contact.length : 0,
         })
       } catch (err) {
         setError("Failed to load statistics.")
@@ -147,7 +158,23 @@ export default function AdminDashboard() {
       href: "/admin/analytics",
       color: "text-purple-600",
       bgColor: "bg-purple-50"
-    }
+    },
+    {
+    title: "Manage Advertisements",
+      description: "Create and edit ads",
+      icon: Settings,
+      href: "/admin/ads",
+      color: "text-orange-600",
+      bgColor: "bg-orange-50"
+    },
+    {
+    title: "contact management",
+      description: "View and respond to contact inquiries",
+      icon: Settings,
+      href: "/admin/contact",
+      color: "text-red-600",
+      bgColor: "bg-red-50"
+    },
   ]
 
   return (
