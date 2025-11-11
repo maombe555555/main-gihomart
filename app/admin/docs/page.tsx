@@ -11,6 +11,7 @@ export default function AdminDocsPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const latestDocRef = useRef<HTMLLIElement>(null)
@@ -40,7 +41,7 @@ export default function AdminDocsPage() {
       .finally(() => setLoading(false))
   }
 
-  function handleAddDoc(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError("")
@@ -54,22 +55,16 @@ export default function AdminDocsPage() {
     if (imageFile) formData.append("image", imageFile)
     if (videoFile) formData.append("video", videoFile)
 
-    fetch("/api/docs", {
-      method: "POST",
-      body: formData,
-    })
+    const method = editingId ? "PUT" : "POST"
+    const url = editingId ? `/api/docs?id=${editingId}` : "/api/docs"
+
+    fetch(url, { method, body: formData })
       .then(async res => {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
-          throw new Error(data.error || "Failed to add doc")
+          throw new Error(data.error || "Failed to save doc")
         }
-        setTitle("")
-        setContent("")
-        setAuthor("")
-        setCategory("")
-        setPdfFile(null)
-        setImageFile(null)
-        setVideoFile(null)
+        resetForm()
         fetchDocs()
       })
       .catch(err => setError(err.message))
@@ -78,13 +73,9 @@ export default function AdminDocsPage() {
 
   function handleDeleteDoc(id: string) {
     if (!confirm("Are you sure you want to delete this documentation?")) return
-
     setLoading(true)
     setError("")
-
-    fetch(`/api/docs?id=${id}`, {
-      method: "DELETE",
-    })
+    fetch(`/api/docs?id=${id}`, { method: "DELETE" })
       .then(async res => {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
@@ -94,6 +85,28 @@ export default function AdminDocsPage() {
       })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
+  }
+
+  function handleEditDoc(doc: any) {
+    setEditingId(doc._id)
+    setTitle(doc.title)
+    setContent(doc.content)
+    setAuthor(doc.author)
+    setCategory(doc.category)
+    setPdfFile(null)
+    setImageFile(null)
+    setVideoFile(null)
+  }
+
+  function resetForm() {
+    setEditingId(null)
+    setTitle("")
+    setContent("")
+    setAuthor("")
+    setCategory("")
+    setPdfFile(null)
+    setImageFile(null)
+    setVideoFile(null)
   }
 
   function handleInputChange(setter: (value: string) => void) {
@@ -106,34 +119,12 @@ export default function AdminDocsPage() {
   return (
     <div className="min-h-screen p-8 bg-gray-50">
       <h1 className="text-2xl font-bold mb-6">Manage Documentation</h1>
-      <form onSubmit={handleAddDoc} className="mb-6 flex gap-2 flex-wrap">
-        <input
-          value={title}
-          onChange={handleInputChange(setTitle)}
-          placeholder="Title"
-          className="border p-2 rounded w-full md:w-1/3"
-          required
-        />
-        <input
-          value={content}
-          onChange={handleInputChange(setContent)}
-          placeholder="Content"
-          className="border p-2 rounded w-full md:w-1/2"
-          required
-        />
-        <input
-          value={author}
-          onChange={handleInputChange(setAuthor)}
-          placeholder="Author"
-          className="border p-2 rounded w-full md:w-1/3"
-          required
-        />
-        <select
-          value={category}
-          onChange={handleInputChange(setCategory)}
-          className="border p-2 rounded w-full md:w-1/3"
-          required
-        >
+
+      <form onSubmit={handleSubmit} className="mb-6 flex gap-2 flex-wrap">
+        <input value={title} onChange={handleInputChange(setTitle)} placeholder="Title" className="border p-2 rounded w-full md:w-1/3" required />
+        <input value={content} onChange={handleInputChange(setContent)} placeholder="Content" className="border p-2 rounded w-full md:w-1/2" required />
+        <input value={author} onChange={handleInputChange(setAuthor)} placeholder="Author" className="border p-2 rounded w-full md:w-1/3" required />
+        <select value={category} onChange={handleInputChange(setCategory)} className="border p-2 rounded w-full md:w-1/3" required>
           <option value="">Select Category</option>
           <option value="Culture">Culture</option>
           <option value="History">History</option>
@@ -143,27 +134,17 @@ export default function AdminDocsPage() {
           <option value="Food & Drink">Food & Drink</option>
           <option value="Arts">Arts</option>
         </select>
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={e => setPdfFile(e.target.files?.[0] || null)}
-          className="border p-2 rounded w-full md:w-1/3"
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={e => setImageFile(e.target.files?.[0] || null)}
-          className="border p-2 rounded w-full md:w-1/3"
-        />
-        <input
-          type="file"
-          accept="video/*"
-          onChange={e => setVideoFile(e.target.files?.[0] || null)}
-          className="border p-2 rounded w-full md:w-1/3"
-        />
+        <input type="file" accept="application/pdf" onChange={e => setPdfFile(e.target.files?.[0] || null)} className="border p-2 rounded w-full md:w-1/3" />
+        <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} className="border p-2 rounded w-full md:w-1/3" />
+        <input type="file" accept="video/*" onChange={e => setVideoFile(e.target.files?.[0] || null)} className="border p-2 rounded w-full md:w-1/3" />
         <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>
-          Add
+          {editingId ? "Update" : "Add"}
         </button>
+        {editingId && (
+          <button type="button" onClick={resetForm} className="bg-gray-500 text-white px-4 py-2 rounded" disabled={loading}>
+            Cancel Edit
+          </button>
+        )}
       </form>
 
       {error && <div className="text-red-600 mb-4">{error}</div>}
@@ -171,47 +152,24 @@ export default function AdminDocsPage() {
 
       <ul className="space-y-4">
         {docs.map((doc: any, index: number) => (
-          <li
-            key={doc._id}
-            ref={index === 0 ? latestDocRef : null}
-            className="bg-white p-4 rounded shadow"
-          >
+          <li key={doc._id} ref={index === 0 ? latestDocRef : null} className="bg-white p-4 rounded shadow">
             <strong className="block text-lg">{doc.title}</strong>
             <p className="text-gray-700">{doc.content}</p>
             <p className="text-sm text-gray-500">Author: {doc.author}</p>
             <p className="text-sm text-gray-500">Category: {doc.category}</p>
 
-            {doc.pdfUrl && (
-              <iframe
-                src={doc.pdfUrl}
-                width="100%"
-                height="400"
-                className="mt-4 border rounded"
-                title={`Preview of ${doc.title}`}
-              />
-            )}
-            {doc.imageUrl && (
-              <img
-                src={doc.imageUrl}
-                alt={`Image for ${doc.title}`}
-                className="mt-4 max-w-full rounded border"
-              />
-            )}
-            {doc.videoUrl && (
-              <video
-                src={doc.videoUrl}
-                controls
-                className="mt-4 w-full rounded border"
-              />
-            )}
+            {doc.pdfUrl && <iframe src={doc.pdfUrl} width="100%" height="400" className="mt-4 border rounded" title={`Preview of ${doc.title}`} />}
+            {doc.imageUrl && <img src={doc.imageUrl} alt={`Image for ${doc.title}`} className="mt-4 max-w-full rounded border" />}
+            {doc.videoUrl && <video src={doc.videoUrl} controls className="mt-4 w-full rounded border" />}
 
-            <button
-              onClick={() => handleDeleteDoc(doc._id)}
-              className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
-              disabled={loading}
-            >
-              Delete
-            </button>
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => handleEditDoc(doc)} className="bg-yellow-500 text-white px-4 py-2 rounded" disabled={loading}>
+                Edit
+              </button>
+              <button onClick={() => handleDeleteDoc(doc._id)} className="bg-red-600 text-white px-4 py-2 rounded" disabled={loading}>
+                Delete
+              </button>
+            </div>
           </li>
         ))}
         {!docs.length && !loading && <li className="text-gray-500">No documentation yet</li>}
