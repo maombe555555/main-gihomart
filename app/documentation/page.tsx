@@ -26,7 +26,7 @@ type Article = {
   category: string
   image?: string
   pdfUrl?: string
-  videoUrl?: string
+  video?: string
   tags: string[]
   featured?: boolean
   readTime: string
@@ -40,9 +40,9 @@ type RawArticle = {
   content: string
   author: string
   category: string
-  imageUrl?: string
+  image?: string
   pdfUrl?: string
-  videoUrl?: string
+  video?: string
 }
 
 export default function DocumentationPage() {
@@ -56,18 +56,25 @@ export default function DocumentationPage() {
   ]
 
   useEffect(() => {
-    fetch("/api/documentation")
-      .then(res => res.ok ? res.json() : Promise.reject("Failed to fetch"))
+    fetch("/api/docs")
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`)
+        }
+        return res.json()
+      })
       .then((data: RawArticle[]) => {
+        console.log("Fetched data:", data)
+        
         const transformed: Article[] = data.map(doc => ({
           id: doc._id || Math.random().toString(36).substring(2, 9),
           title: doc.title,
-          description: doc.content,
+          description: doc.content.substring(0, 200) + '...',
           author: doc.author,
           category: doc.category,
-          image: doc.imageUrl,
+          image: doc.image,
           pdfUrl: doc.pdfUrl,
-          videoUrl: doc.videoUrl,
+          video: doc.video,
           tags: [doc.category],
           featured: false,
           readTime: "3 min read",
@@ -162,15 +169,20 @@ export default function DocumentationPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredArticles.slice(0, 3).map(article => (
                 <Card key={article.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="relative h-48">
-                    <Image
-                      src={article.image || "/placeholder.svg"}
-                      alt={article.title}
-                      fill
-                      className="object-cover"
-                    />
-                    <Badge className="absolute top-4 left-4 bg-orange-600">Featured</Badge>
-                  </div>
+                  {article.image && (
+                    <div className="relative h-48">
+                      <Image
+                        src={article.image}
+                        alt={article.title}
+                        fill
+                        className="object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg"
+                        }}
+                      />
+                      <Badge className="absolute top-4 left-4 bg-orange-600">Featured</Badge>
+                    </div>
+                  )}
                   <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="secondary">{article.category}</Badge>
@@ -223,15 +235,20 @@ export default function DocumentationPage() {
               {filteredArticles.map(article => (
                 <Card key={article.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="grid md:grid-cols-4 gap-6">
-                    <div className="relative h-48">
-                      <Image
-                        src={article.image || "/placeholder.svg"}
-                        alt={article.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="md:col-span-3 p-6">
+                    {article.image && (
+                      <div className="relative h-48 md:h-full">
+                        <Image
+                          src={article.image}
+                          alt={article.title}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = "/placeholder.svg"
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div className={`p-6 ${article.image ? 'md:col-span-3' : 'md:col-span-4'}`}>
                       <div className="flex items-center gap-2 mb-3">
                         <Badge variant="secondary">{article.category}</Badge>
                         {article.featured && (
@@ -272,27 +289,34 @@ export default function DocumentationPage() {
                         </Button>
                       </div>
 
-                      {/* Media Previews */}
+                      {/* Media Previews - Only show in list if they exist */}
                       {article.image && (
-                        <img
-                          src={article.image}
-                          alt="Article image"
-                          className="mt-6 rounded shadow-md max-w-full"
-                        />
+                        <div className="mt-6">
+                          <img
+                            src={article.image}
+                            alt="Article image"
+                            className="rounded shadow-md max-w-full h-48 object-cover"
+                          />
+                        </div>
                       )}
                       {article.pdfUrl && (
-                        <iframe
-                          src={article.pdfUrl}
-                          className="mt-6 w-full h-96 border rounded"
-                          title="PDF Preview"
-                        />
+                        <div className="mt-6">
+                          <iframe
+                            src={article.pdfUrl}
+                            className="w-full h-64 border rounded"
+                            title="PDF Preview"
+                          />
+                          {/* PDF download link removed */}
+                        </div>
                       )}
-                      {article.videoUrl && (
-                        <video
-                          src={article.videoUrl}
-                          controls
-                          className="mt-6 w-full rounded border"
-                        />
+                      {article.video && (
+                        <div className="mt-6">
+                          <video
+                            src={article.video}
+                            controls
+                            className="w-full rounded border max-h-64"
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -305,4 +329,3 @@ export default function DocumentationPage() {
     </div>
   )
 }
-    

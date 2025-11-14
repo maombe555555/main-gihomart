@@ -40,29 +40,31 @@ export default function HomePage() {
   
   useEffect(() => {
     // --- START OF MOCK VIDEO AD API FETCH ---
-    const fetchAdData = async () => {
-      // NOTE: Replace this with your actual fetch call to your Ads API
-      // Ensure the URLs are embeddable (e.g., YouTube embed format)
-      const mockAds: VideoAd[] = [
-        { id: 1, videoUrl: "https://www.youtube.com/embed/gLgS9Gq8g9o?autoplay=1&mute=1&controls=0", linkUrl: "/ad/video1", title: "Cultural Tour Video Ad" },
-        { id: 2, videoUrl: "https://www.youtube.com/embed/yrqUF9O164U?autoplay=1&mute=1&controls=0", linkUrl: "/ad/video2", title: "Hiking Promotion Video" },
-        { id: 3, videoUrl: "https://www.youtube.com/embed/V9h4P61VwHk?autoplay=1&mute=1&controls=0", linkUrl: "/ad/video3", title: "Rwanda Travel Highlight" },
-      ];
-      setVideoAds(mockAds);
-    };
-    fetchAdData();
-    // --- END OF MOCK VIDEO AD API FETCH ---
-
-    // --- START OF AD ROTATION LOGIC ---
-    // Start rotation only if ads are fetched
-    if (videoAds.length > 0) {
-      const rotationInterval = setInterval(() => {
-        setCurrentAdIndex(prevIndex => (prevIndex + 1) % videoAds.length);
-      }, 5000); // Rotate every 5 seconds
-      
-      // Cleanup interval on component unmount
-      return () => clearInterval(rotationInterval);
+   useEffect(() => {
+  // --- FETCH ADS ONLY FROM YOUR API ---
+  const fetchAds = async () => {
+    try {
+      const res = await fetch("/api/ads");
+      const data = await res.json();
+      setVideoAds(data.ads || []);
+    } catch (error) {
+      console.error("Failed to fetch ads:", error);
+      setVideoAds([]);
     }
+  };
+
+  fetchAds();
+
+  // --- AD ROTATION LOGIC ---
+  if (videoAds.length > 0) {
+    const rotationInterval = setInterval(() => {
+      setCurrentAdIndex(prevIndex => (prevIndex + 1) % videoAds.length);
+    }, 5000);
+
+    return () => clearInterval(rotationInterval);
+  }
+}, [videoAds.length]);
+
     // --- END OF AD ROTATION LOGIC ---
 
     // Fetch primary data (kept for context)

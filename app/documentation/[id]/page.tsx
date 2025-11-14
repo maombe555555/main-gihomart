@@ -1,81 +1,49 @@
-import { notFound } from "next/navigation"
-import Image from "next/image"
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft, Calendar, User } from "lucide-react"
+import { dbConnect } from "@/lib/mongodb"
+import Documentation, { DocumentationType } from "@/models/Documentation"
 
-type Article = {
-  _id: string
-  title: string
-  content: string
-  author: string
-  category: string
-  createdAt?: string
-  image?: string
-  pdfUrl?: string
-  video?: string
-}
+export default async function DocumentationPage({ params }: { params: { id: string } }) {
+  await dbConnect()
 
-export default async function DocumentationDetailPage({ params }: { params: { id: string } }) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/docs/${params.id}`,
-    { cache: "no-store" }
-  )
+  // Tell TS what type to expect
+  const doc = (await Documentation.findById(params.id).lean()) as DocumentationType | null
 
-  if (!res.ok) return notFound()
-
-  const article: Article = await res.json()
-  if (!article?.title) return notFound()
+  if (!doc) {
+    return <div>Documentation not found</div>
+  }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      {/* Back Button */}
-      <Link href="/documentation">
-        <Button variant="outline" className="mb-6 flex items-center gap-2">
-          <ArrowLeft className="w-4 h-4" />
-          Back to Documentation
-        </Button>
-      </Link>
-
-      {/* Title and Metadata */}
-      <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
-      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
-        <div className="flex items-center gap-1">
-          <User className="w-4 h-4" />
-          {article.author}
-        </div>
-        <div className="flex items-center gap-1">
-          <Calendar className="w-4 h-4" />
-          {article.createdAt ? new Date(article.createdAt).toLocaleDateString() : "Unknown date"}
-        </div>
-        <Badge variant="secondary">{article.category}</Badge>
-      </div>
-
-      {/* Content */}
-      <p className="text-lg leading-relaxed mb-6">{article.content}</p>
-
-      {/* Media Previews */}
-      {article.image && (
-        <Image
-          src={article.image}
-          alt="Article image"
-          width={800}
-          height={400}
-          className="rounded shadow mb-6"
-        />
+    <div className="max-w-4xl mx-auto px-6 py-12 bg-white shadow rounded-lg">
+      <h1 className="text-3xl font-bold mb-4">{doc.title}</h1>
+      <p className="text-lg mb-6">{doc.content}</p>
+      <p className="text-sm text-gray-600">Author: {doc.author}</p>
+      <p className="text-sm text-gray-600">Category: {doc.category}</p>
+      {doc.createdAt && (
+        <p className="text-sm text-gray-500">
+          Created: {new Date(doc.createdAt).toLocaleDateString()}
+        </p>
       )}
 
-      {article.pdfUrl && (
-        <iframe
-          src={article.pdfUrl}
-          className="w-full h-96 border rounded mb-6"
-          title="PDF Preview"
-        />
+      {doc.pdfUrl && (
+        <div className="mt-6">
+          <h3 className="font-semibold">PDF Document:</h3>
+          <iframe src={doc.pdfUrl} className="w-full h-96 border rounded-lg shadow" />
+        </div>
       )}
 
-      {article.video && (
-        <video src={article.video} controls className="w-full rounded border" />
+      {doc.image && (
+        <div className="mt-6">
+          <h3 className="font-semibold">Image:</h3>
+          <img src={doc.image} alt={doc.title} className="rounded shadow max-w-full" />
+        </div>
+      )}
+
+      {doc.video && (
+        <div className="mt-6">
+          <h3 className="font-semibold">Video:</h3>
+          <video controls className="w-full rounded shadow">
+            <source src={doc.video} type="video/mp4" />
+          </video>
+        </div>
       )}
     </div>
   )

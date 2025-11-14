@@ -1,6 +1,6 @@
-import { Schema, model, models } from "mongoose"
+import { Schema, model, models, Document } from "mongoose"
 
-export interface DocumentationType {
+export interface DocumentationType extends Document {
   _id: string
   title: string
   content: string
@@ -23,4 +23,5 @@ const DocumentationSchema = new Schema<DocumentationType>({
   video: String,
 })
 
-export default models.Documentation || model<DocumentationType>("Documentation", DocumentationSchema)
+export default models.Documentation ||
+  model<DocumentationType>("Documentation", DocumentationSchema)

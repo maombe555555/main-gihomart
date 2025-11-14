@@ -1,53 +1,50 @@
-// app/api/admin/ads/route.ts
-import { NextResponse } from "next/server"
-import dbConnect from "@/lib/mongodb"
-import Ad from "@/models/Ad"
+import { NextResponse } from "next/server";
+import { dbConnect } from "@/lib/mongodb";
+import Ad from "@/models/Ad";
 
-
+// GET all ads (with optional ?placement=header)
 export async function GET(req: Request) {
-  await dbConnect()
-  const { searchParams } = new URL(req.url)
-  const placement = searchParams.get("placement") || "home"
-  const ads = await Ad.find({ placement }).sort({ createdAt: -1 })
-  return NextResponse.json({ Ads: ads })
+  try {
+    await dbConnect();
+
+    const { searchParams } = new URL(req.url);
+    const placement = searchParams.get("placement");
+
+    const query = placement ? { placement } : {};
+
+    const ads = await Ad.find(query).lean();
+
+    // convert non-serializable fields
+    const transformed = ads.map(ad => ({
+      ...ad,
+      _id: ad._id?.toString(),
+      createdAt: ad.createdAt ? new Date(ad.createdAt).toISOString() : null,
+      updatedAt: ad.updatedAt ? new Date(ad.updatedAt).toISOString() : null,
+    }));
+
+    return NextResponse.json({ ads: transformed });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
+// CREATE new ad
 export async function POST(req: Request) {
   try {
-    await dbConnect()
-    const { title, videoUrl, placement = "home", isActive = true } = await req.json()
+    await dbConnect();
+    const body = await req.json();
 
-    if (!title || !videoUrl) {
-      return NextResponse.json({ error: "Title and videoUrl are required" }, { status: 400 })
-    }
+    const ad = await Ad.create(body);
 
-    const ad = await Ad.create({ title, videoUrl, placement, isActive })
-    return NextResponse.json({ ad }, { status: 201 })
-  } catch (error) {
-    console.error("Create ad error:", error)
-    return NextResponse.json({ error: "Server error" }, { status: 500 })
-  }
-}
-export async function PUT(req: Request) {
-  try {
-    await dbConnect()
-    const { searchParams } = new URL(req.url)
-    const adId = searchParams.get("id")
-    if (!adId) {
-      return NextResponse.json({ error: "Missing ad ID" }, { status: 400 })
-    }
-    const { isActive } = await req.json()
-    const ad = await Ad.findById(adId)
-    if (!ad) {
-      return NextResponse.json({ error: "Ad not found" }, { status: 404 })
-    }
-    ad.isActive = isActive
-    await ad.save()
-    return NextResponse.json({ ad })
-  }
-    catch (error) {
-    console.error("Update ad error:", error)
-    return NextResponse.json({ error: "Server error" }, { status: 500 })
-  }
+    const transformed = {
+      ...ad.toObject(),
+      _id: ad._id.toString(),
+      createdAt: ad.createdAt?.toISOString(),
+      updatedAt: ad.updatedAt?.toISOString(),
+    };
 
+    return NextResponse.json({ ad: transformed });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
 }
