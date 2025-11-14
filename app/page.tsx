@@ -6,12 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Navigation } from "@/components/navigation"
-import { MapPin, Star, Play, RotateCw } from "lucide-react" 
+import { MapPin, Star, RotateCw } from "lucide-react" 
 import { useEffect, useState } from "react"
 
 export default function HomePage() {
   
-  // Define type for your Ad data (Updated back to Video Ad)
   interface VideoAd {
     id: number;
     videoUrl: string;
@@ -19,16 +18,6 @@ export default function HomePage() {
     title: string;
   }
   
-  const [products, setProducts] = useState([])
-  const [programs, setPrograms] = useState([])
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  
-  // State for multiple video ads from the API
-  const [videoAds, setVideoAds] = useState<VideoAd[]>([]);
-  // State to track the currently displayed ad
-  const [currentAdIndex, setCurrentAdIndex] = useState(0);
-  
-  // Define Article type for better clarity
   interface Article {
     id: number;
     title: string;
@@ -37,37 +26,49 @@ export default function HomePage() {
     fullText: string;
     readTime: string;
   }
-  
+
+  const [products, setProducts] = useState<any[]>([])
+  const [programs, setPrograms] = useState<any[]>([])
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
+  const [videoAds, setVideoAds] = useState<VideoAd[]>([])
+  const [currentAdIndex, setCurrentAdIndex] = useState(0)
+  const [adsLoading, setAdsLoading] = useState(true)
+  const [adsError, setAdsError] = useState(false)
+
   useEffect(() => {
-    // --- START OF MOCK VIDEO AD API FETCH ---
-   useEffect(() => {
-  // --- FETCH ADS ONLY FROM YOUR API ---
-  const fetchAds = async () => {
-    try {
-      const res = await fetch("/api/ads");
-      const data = await res.json();
-      setVideoAds(data.ads || []);
-    } catch (error) {
-      console.error("Failed to fetch ads:", error);
-      setVideoAds([]);
+    const fetchAds = async () => {
+      try {
+        setAdsLoading(true)
+        const res = await fetch("/api/ads")
+        if (!res.ok) throw new Error("Failed to fetch ads")
+        const data = await res.json()
+        if (Array.isArray(data.ads) && data.ads.length > 0) {
+          setVideoAds(data.ads)
+          setAdsError(false)
+        } else {
+          setVideoAds([])
+          setAdsError(true)
+        }
+      } catch {
+        setVideoAds([])
+        setAdsError(true)
+      } finally {
+        setAdsLoading(false)
+      }
     }
-  };
+    fetchAds()
+  }, [])
 
-  fetchAds();
+  useEffect(() => {
+    if (videoAds.length > 0) {
+      const rotationInterval = setInterval(() => {
+        setCurrentAdIndex(prev => (prev + 1) % videoAds.length)
+      }, 5000)
+      return () => clearInterval(rotationInterval)
+    }
+  }, [videoAds.length])
 
-  // --- AD ROTATION LOGIC ---
-  if (videoAds.length > 0) {
-    const rotationInterval = setInterval(() => {
-      setCurrentAdIndex(prevIndex => (prevIndex + 1) % videoAds.length);
-    }, 5000);
-
-    return () => clearInterval(rotationInterval);
-  }
-}, [videoAds.length]);
-
-    // --- END OF AD ROTATION LOGIC ---
-
-    // Fetch primary data (kept for context)
+  useEffect(() => {
     fetch("/api/products")
       .then(res => res.json())
       .then(setProducts)
@@ -76,67 +77,18 @@ export default function HomePage() {
       .then(res => res.json())
       .then(setPrograms)
       .catch(() => setPrograms([]))
-  }, [videoAds.length]) 
+  }, [])
 
-
-  // Get the currently active ad
-  const currentAd = videoAds[currentAdIndex];
-
+  const currentAd = videoAds[currentAdIndex]
 
   const popularTrips = [
-    {
-      id: 1,
-      name: "Sailing Trip",
-      image: "/images/nmp.jpg?height=200&width=300",
-      price: "$25",
-      duration: "7 days",
-      location: "HUYE MOUNTAIN ",
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      name: " Cultural Experience",
-      image: "/images/image1.jpg?height=200&width=300",
-      price: "$35",
-      duration: "5 days",
-      location: "HUYE",
-      rating: 4.9,
-    },
-    {
-      id: 3,
-      name: "Tour to a goat farm",
-      image: "/images/RWANDA GOATS.jpg?height=200&width=300",
-      price: "$30",
-      duration: "6 days",
-      location: "HUYE",
-      rating: 4.7,
-    },
-    {
-      id: 4,
-      name: "Coffee Experience",
-      image: "/images/miss.jpg?height=200&width=300",
-      price: "$25",
-      duration: "5 days",
-      location: "HUYE",
-      rating: 4.9,
-    },
-    {
-      id: 5,
-      name: " Hiking Tour",
-      image: "/images/IMG-20231126-WA0030.jpg?height=200&width=300",
-      price: "$25",
-      duration: "6 days",
-      location: "HUYE",
-      rating: 4.7,
-    }, 	{
-      id: 6,
-      name: " Heritage and Historical 	Tour",
-      image: "/images/DSC_0027.JPG?height=200&width=300",
-      price: "$25",
-      duration: "6 days",
-      location: "HUYE",
-      rating: 4.7,
-    }, ]
+    { id: 1, name: "Sailing Trip", image: "/images/nmp.jpg?height=200&width=300", price: "$25", duration: "7 days", location: "HUYE MOUNTAIN", rating: 4.8 },
+    { id: 2, name: "Cultural Experience", image: "/images/image1.jpg?height=200&width=300", price: "$35", duration: "5 days", location: "HUYE", rating: 4.9 },
+    { id: 3, name: "Tour to a goat farm", image: "/images/RWANDA GOATS.jpg?height=200&width=300", price: "$30", duration: "6 days", location: "HUYE", rating: 4.7 },
+    { id: 4, name: "Coffee Experience", image: "/images/miss.jpg?height=200&width=300", price: "$25", duration: "5 days", location: "HUYE", rating: 4.9 },
+    { id: 5, name: "Hiking Tour", image: "/images/IMG-20231126-WA0030.jpg?height=200&width=300", price: "$25", duration: "6 days", location: "HUYE", rating: 4.7 },
+    { id: 6, name: "Heritage and Historical Tour", image: "/images/DSC_0027.JPG?height=200&width=300", price: "$25", duration: "6 days", location: "HUYE", rating: 4.7 },
+  ]
 
   const travelArticles: Article[] = [
     {
@@ -176,25 +128,13 @@ For those seeking authentic cultural experiences, Huye provides access to commun
     },
   ]
 
-  const partners = [
-    { name: "Rwanda Tourism Board", logo: "/placeholder.svg?height=60&width=120" },
-    { name: "UNESCO", logo: "/placeholder.svg?height=60&width=120" },
-    { name: "CNRU", logo: "/placeholder.svg?height=60&width=120" },
-    { name: "Travel Partners", logo: "/placeholder.svg?height=60&width=120" },
-  ]
-  
-  // Modal handlers
-  const openArticleModal = (article: Article) => {
-      setSelectedArticle(article);
-  };
-  const closeArticleModal = () => {
-      setSelectedArticle(null);
-  };
+  const openArticleModal = (article: Article) => setSelectedArticle(article)
+  const closeArticleModal = () => setSelectedArticle(null)
 
   return (
     <div className="min-h-screen bg-background relative">
-      {/* Social Media Icons Top Right */}
       <div className="absolute top-4 right-6 z-50 flex gap-4">
+        {/* Social media icons */}
         <a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-blue-500">
           <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.406.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.406 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg>
         </a>
@@ -208,61 +148,55 @@ For those seeking authentic cultural experiences, Huye provides access to commun
           <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11.75 20h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.25 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/></svg>
         </a>
       </div>
+
       <Navigation />
 
-      {/* --- FIXED VERTICAL PROMOTION (Right Side - ROTATING VIDEO ADS) --- */}
-      {currentAd && (
-        <div className="fixed top-1/2 right-0 transform -translate-y-1/2 z-40 hidden md:block">
-          {/* Padding increased: p-3 is 12px (approx 3px increase from p-1/4px) */}
-          <div className="bg-gray-900 **p-3** rounded-l-lg shadow-2xl flex flex-col items-center space-y-2 border-2 border-orange-600">
-            
-            {/* The Rotating Ad Video */}
-            <Link 
-              key={currentAd.id} // Key forces re-render to load new video iframe content
-              href={currentAd.linkUrl} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="block overflow-hidden rounded-tl-lg rounded-bl-lg"
+      {/* Advertisement Div on Right Side */}
+      <div className="fixed top-1/2 right-0 transform -translate-y-1/2 z-40 hidden md:flex flex-col items-center space-y-2 bg-gray-900 p-3 rounded-l-lg shadow-2xl border-2 border-orange-600 w-36 py-4 px-2">
+        {adsLoading ? (
+          <span className="text-orange-400 text-sm text-center">Loading Ads...</span>
+        ) : adsError ? (
+          <span className="text-red-500 text-sm text-center px-2">Failed to load ads</span>
+        ) : currentAd ? (
+          <>
+            <Link
+              href={currentAd.linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={currentAd.title}
+              className="block w-full h-64 rounded-tl-lg rounded-bl-lg overflow-hidden"
             >
-              <div className="w-32 h-64 relative overflow-hidden"> {/* Increased size slightly for better video viewing */}
-                <iframe
-                  src={currentAd.videoUrl} 
-                  title={currentAd.title}
-                  frameBorder="0"
-                  // Ensure autoplay and mute for background fixed ads
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <iframe
+                src={currentAd.videoUrl}
+                title={currentAd.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </Link>
-            
-            {/* Rotation Button (Manual Skip) */}
             {videoAds.length > 1 && (
-              <Button 
-                size="icon" 
-                className="bg-orange-600 hover:bg-orange-700 text-white rounded-full"
-                onClick={() => setCurrentAdIndex(prevIndex => (prevIndex + 1) % videoAds.length)}
-                aria-label="Next Video Ad"
-              >
-                <RotateCw className="w-5 h-5 fill-white" />
-              </Button>
+              <>
+                <Button
+                  size="icon"
+                  className="bg-orange-600 hover:bg-orange-700 text-white rounded-full"
+                  onClick={() => setCurrentAdIndex((prev) => (prev + 1) % videoAds.length)}
+                  aria-label="Next Video Ad"
+                >
+                  <RotateCw className="w-5 h-5 fill-white" />
+                </Button>
+                <span className="text-xs text-orange-400 select-none">
+                  {currentAdIndex + 1} / {videoAds.length}
+                </span>
+              </>
             )}
-            
-            {/* Ad Count Indicator */}
-            {videoAds.length > 1 && (
-              <span className="text-xs text-orange-400">
-                {currentAdIndex + 1} / {videoAds.length}
-              </span>
-            )}
-            
-          </div>
-        </div>
-      )}
-      {/* -------------------------------------------------------- */}
+          </>
+        ) : (
+          <span className="text-orange-400 text-sm text-center">No ads available</span>
+        )}
+      </div>
 
-
-      {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center text-white overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -282,20 +216,13 @@ For those seeking authentic cultural experiences, Huye provides access to commun
             Rwanda, we are dedicated to showcasing the rich heritage and natural wonders of our beloved country.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="bg-orange-600 hover:bg-orange-700">
-            
+            <Button asChild size="lg" variant="outline" className="bg-orange-600 hover:bg-orange-700">
               <Link href="/about">Learn More</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Our Services Section (Products from DB) */}
       {products.length > 0 && (
         <section className="py-16 px-4 bg-white">
           <div className="max-w-7xl mx-auto">
@@ -306,21 +233,17 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               </p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {products.map((product: any) => (
+              {products.map(product => (
                 <Card key={product._id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="relative h-48">
-                    {product.image && (
-                      <Image src={product.image} alt={product.name} fill className="object-cover" />
-                    )}
+                    {product.image && <Image src={product.image} alt={product.name} fill className="object-cover" />}
                   </div>
                   <CardHeader>
                     <CardTitle className="text-xl">{product.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700 mb-2">{product.description}</p>
-                    {product.price && (
-                      <span className="text-lg font-bold text-orange-600">${product.price}</span>
-                    )}
+                    {product.price && <span className="text-lg font-bold text-orange-600">${product.price}</span>}
                   </CardContent>
                 </Card>
               ))}
@@ -329,7 +252,6 @@ For those seeking authentic cultural experiences, Huye provides access to commun
         </section>
       )}
 
-      {/* Our Programs Section (Programs from DB) */}
       {programs.length > 0 && (
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-7xl mx-auto">
@@ -340,16 +262,14 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               </p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {programs.map((program: any) => (
+              {programs.map(program => (
                 <Card key={program._id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <CardTitle className="text-xl">{program.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700 mb-2">{program.description}</p>
-                    {program.schedule && (
-                      <span className="text-sm font-medium text-blue-600">{program.schedule}</span>
-                    )}
+                    {program.schedule && <span className="text-sm font-medium text-blue-600">{program.schedule}</span>}
                   </CardContent>
                 </Card>
               ))}
@@ -358,19 +278,17 @@ For those seeking authentic cultural experiences, Huye provides access to commun
         </section>
       )}
 
-      {/* Popular Trips Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Popular Trips</h2>
             <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto">
-            GiHomarts & Cultours Ltd curates authentic travel experiences in Rwanda that highlight its natural beauty, cultural heritage, and community spirit. 
-            Experience Rwanda's most sought-after destinations with our carefully crafted tour packages 
+              GiHomarts & Cultours Ltd curates authentic travel experiences in Rwanda that highlight its natural beauty, cultural heritage, and community spirit. 
+              Experience Rwanda's most sought-after destinations with our carefully crafted tour packages 
             </p>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {popularTrips.map((trip) => (
+            {popularTrips.map(trip => (
               <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative h-48">
                   <Image src={trip.image || "/npm.jpg"} alt={trip.name} fill className="object-cover" />
@@ -403,22 +321,17 @@ For those seeking authentic cultural experiences, Huye provides access to commun
         </div>
       </section>
 
-   
-      {/* 📣 END OF ADVERTISEMENT BANNER 📣 */}
-
-      {/* Amazing Travel Articles */}
       <section className="py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Amazing Travel Articles</h2>
-            
-          </div> <p className="text-lg md:text-xl mb-8 text-black-300 leading-relaxed">
+          </div>
+          <p className="text-lg md:text-xl mb-8 text-black-300 leading-relaxed">
             Our vision is to revolutionize Rwandan commerce by providing a trusted digital marketplace that connects local vendors, artisans, 
             and farmers with a growing community of conscious consumers. We aspire to be a catalyst for inclusive economic growth,where even the smallest entrepreneur has a platform to thrive. Our goal is to empower underserved communities with technology-driven tools that amplify their voices, increase visibility, and foster sustainability. We envision a Rwanda where commerce is no longer limited by geography or infrastructure, but rather fueled by innovation, resilience, and community spirit. Through partnerships, mobile-first solutions, and user-centered design, we strive to build more than just a marketplace.we are building a movement where culture meets commerce, and tradition merges with technology to shape a brighter, more connected future for all.
-            </p>
-
+          </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {travelArticles.map((article) => (
+            {travelArticles.map(article => (
               <Card key={article.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative h-48">
                   <Image src={article.image || "/miss.jpg"} alt={article.title} fill className="object-cover" />
@@ -435,15 +348,12 @@ For those seeking authentic cultural experiences, Huye provides access to commun
                         Read More
                       </Button>
                     ) : (
-                      <Button variant="outline" size="sm">
-                        Read More
-                      </Button>
+                      <Button variant="outline" size="sm">Read More</Button>
                     )}
                   </div>
                 </CardContent>
               </Card>
             ))}
-            {/* Modal for fullText - Using conditional rendering here based on selectedArticle */}
             {selectedArticle && (
               <div
                 key={selectedArticle.id}
@@ -452,7 +362,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               >
                 <div
                   className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative border border-orange-200"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                 >
                   <button
                     className="absolute top-4 right-4 text-gray-400 hover:text-orange-600 text-2xl font-bold focus:outline-none"
@@ -463,28 +373,25 @@ For those seeking authentic cultural experiences, Huye provides access to commun
                   </button>
                   <h3 className="text-3xl font-bold mb-6 text-orange-700 text-center">{selectedArticle.title}</h3>
                   <div className="max-h-[60vh] overflow-y-auto pr-2">
-                    <p className="text-gray-800 leading-relaxed whitespace-pre-line text-base md:text-lg">
-                      {selectedArticle.fullText}
-                    </p>
+                    <p className="text-gray-800 leading-relaxed whitespace-pre-line text-base md:text-lg">{selectedArticle.fullText}</p>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Featured Video */}
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/yrqUF9O164U"
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full rounded-lg"
-                />
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/yrqUF9O164U"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full rounded-lg"
+              />
             </div>
             <div className="relative h-64">
               <Image
@@ -498,37 +405,20 @@ For those seeking authentic cultural experiences, Huye provides access to commun
         </div>
       </section>
 
-      {/* Partners Section */}
       <section className="py-12 px-0 bg-gray-50 w-full">
         <div className="max-w-full mx-auto">
           <h3 className="text-xl font-semibold text-center mb-8 text-muted-foreground">Our Partners</h3>
-          <p className="text-gray-400 mb-4 	text-center">
+          <p className="text-gray-400 mb-4 text-center">
             Preserving heritage for today and tomorrow through authentic cultural tourism experiences in Rwanda.
           </p>
           <div className="w-full flex flex-wrap justify-center items-center gap-12 md:gap-20 px-2 md:px-8">
             {[
-              {
-                img: "cnru.png",
-                name: "CNRU",
-                url: "https://www.cnru.rw/"
-              },
-              {
-                img: "inteko-y-umuco.png",
-                name: "Inteko y'Umuco",
-                url: "https://www.intekoyumuco.rw/"
-              },
-              {
-                img: "iprc-kitabi.png",
-                name: "IPRC Kitabi",
-                url: "https://www.iprckitabi.rp.ac.rw/"
-              },
-              {
-                img: "university-of-rwanda.png",
-                name: "University of Rwanda",
-                url: "https://www.ur.ac.rw/"
-              }
-            ].map((partner, index) => (
-              <Link key={index} href={partner.url} target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-white rounded shadow p-4 md:p-8" style={{minWidth:180, minHeight:90}}>
+              { img: "cnru.png", name: "CNRU", url: "https://www.cnru.rw/" },
+              { img: "inteko-y-umuco.png", name: "Inteko y'Umuco", url: "https://www.intekoyumuco.rw/" },
+              { img: "iprc-kitabi.png", name: "IPRC Kitabi", url: "https://www.iprckitabi.rp.ac.rw/" },
+              { img: "university-of-rwanda.png", name: "University of Rwanda", url: "https://www.ur.ac.rw/" }
+            ].map((partner, i) => (
+              <Link key={i} href={partner.url} target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-white rounded shadow p-4 md:p-8" style={{minWidth:180, minHeight:90}}>
                 <Image
                   src={`/images/${partner.img}`}
                   alt={partner.name}
@@ -542,11 +432,9 @@ For those seeking authentic cultural experiences, Huye provides access to commun
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
-            {/* Logo and Description */}
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Image
@@ -563,45 +451,25 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               </p>
             </div>
 
-            {/* Our Services */}
             <div>
               <h4 className="font-semibold mb-4">Our Services</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/cultural-tours" className="hover:text-white">
-                    Cultural Tours
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/heritage-sites" className="hover:text-white">
-                    Heritage Sites
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/community-tourism" className="hover:text-white">
-                    Community Tourism
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/adventure-tours" className="hover:text-white">
-                    Adventure Tours
-                  </Link>
-                </li>
-                
+                <li><Link href="/cultural-tours" className="hover:text-white">Cultural Tours</Link></li>
+                <li><Link href="/heritage-sites" className="hover:text-white">Heritage Sites</Link></li>
+                <li><Link href="/community-tourism" className="hover:text-white">Community Tourism</Link></li>
+                <li><Link href="/adventure-tours" className="hover:text-white">Adventure Tours</Link></li>
               </ul>
             </div>
 
-            {/* Contact */}
             <div>
               <h4 className="font-semibold mb-4">Contact</h4>
               <div className="space-y-2 text-gray-400">
                 <p>Southern Province, Rwanda</p>
                 <p>Email: gihomart@250gmail.com</p>
-                <p>Phone: +250 	788 440 243</p>
+                <p>Phone: +250 788 440 243</p>
               </div>
             </div>
 
-            {/* QR Code */}
             <div className="flex flex-col items-center justify-start">
               <h4 className="font-semibold mb-4">Scan QR</h4>
               <Image
@@ -615,8 +483,8 @@ For those seeking authentic cultural experiences, Huye provides access to commun
           </div>
 
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            {/* Social Media Icons */}
             <div className="flex justify-center gap-6 mb-6">
+              {/* Social Media Icons repeated for footer */}
               <a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-blue-500">
                 <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.406.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.406 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg>
               </a>
@@ -630,10 +498,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
                 <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11.75 20h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.25 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/></svg>
               </a>
             </div>
-            
-            <p className="text-sm">
-              &copy; {new Date().getFullYear()} GiHomarts & Cultours Ltd. All rights reserved.
-            </p>
+            <p className="text-sm">&copy; {new Date().getFullYear()} GiHomarts & Cultours Ltd. All rights reserved.</p>
           </div>
         </div>
       </footer>

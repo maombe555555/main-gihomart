@@ -60,8 +60,26 @@ export async function POST(req: Request) {
     const videoUrl = form.get("videoUrl") as string | null;
     const videoFile = form.get("video") as File | null;
 
+    if (!title || !placement) {
+      return NextResponse.json(
+        { error: "Missing required fields: title and placement" },
+        { status: 400 }
+      );
+    }
+
     let fileInfo: { fileName: string; fileType: string; fileSize: number } | null = null;
+
+    // Validate videoUrl or videoFile presence
+    if (!videoUrl && !videoFile) {
+      return NextResponse.json(
+        { error: "Either videoUrl or video file must be provided" },
+        { status: 400 }
+      );
+    }
+
     if (videoFile) {
+      // You might want to handle file upload here (e.g., upload to cloud storage)
+      // For now, just store file info metadata
       fileInfo = {
         fileName: videoFile.name,
         fileType: videoFile.type,
@@ -87,6 +105,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ad: transformed });
   } catch (error: any) {
+    // Log error for debugging
+    console.error("POST /api/ads error:", error);
     return NextResponse.json(
       { error: error.message || "Invalid request" },
       { status: 400 }
