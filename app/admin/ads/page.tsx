@@ -113,7 +113,7 @@ export default function AdminAdsPage() {
 
   async function toggleActive(adId: string, nextActive: boolean) {
     try {
-      const res = await fetch(`/api/admin/ads/${adId}`, {
+      const res = await fetch(`/api/ads/${adId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isActive: nextActive }),
@@ -128,7 +128,7 @@ export default function AdminAdsPage() {
 
   async function removeAd(adId: string) {
     try {
-      const res = await fetch(`/api/admin/ads/${adId}`, { method: "DELETE" })
+      const res = await fetch(`/api/ads/${adId}`, { method: "DELETE" })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Failed to delete ad")
       await fetchAds()
@@ -184,7 +184,7 @@ export default function AdminAdsPage() {
                 <Input
                   id="videoFile"
                   type="file"
-                  accept="video/mp4"
+                  accept="video/*"
                   onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
                   required
                 />
@@ -273,7 +273,7 @@ export default function AdminAdsPage() {
                           </Button>
                         </>
                       ) : (
-                        <>  
+                        <>
                           <Button
                             variant={ad.isActive ? "secondary" : "default"}
                             onClick={() => toggleActive(ad._id, !ad.isActive)}
@@ -282,16 +282,16 @@ export default function AdminAdsPage() {
                           </Button>
                           <Button
                             variant="outline"
-                            onClick={() => {  
+                            onClick={() => {
                               setEditingAdId(ad._id)
                               setEditTitle(ad.title)
                               setEditVideoUrl(ad.videoUrl)
                             }}
                           >
-                            Edit  
+                            Edit
                           </Button>
                           <Button variant="destructive" onClick={() => removeAd(ad._id)}>
-                            Remove  
+                            Remove
                           </Button>
                         </>
                       )}
@@ -299,10 +299,10 @@ export default function AdminAdsPage() {
                   </div>
                   <video src={ad.videoUrl} controls className="w-full rounded-md" />
                 </div>
-              ))} 
+              ))}
             </div>
-          )} 
-        </CardContent>  
+          )}
+        </CardContent>
       </Card>
     </div>
   )

@@ -1,46 +1,42 @@
-import { NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
-import User from "@/models/User"; 
-import bcrypt from "bcryptjs";
+import { NextRequest, NextResponse } from "next/server"
+import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+import dbConnect from "@/lib/mongodb"
+import User from "@/models/User"
 
-export async function POST(req: Request) {
-  await connectDB();
+export async function POST(request: NextRequest) {
+  await dbConnect()
 
-  const { email, password } = await req.json();
+  try {
+    const { email, password } = await request.json()
 
-  // Find user by email
-  const user = await User.findOne({ email });
+    if (!email || !password) {
+      return NextResponse.json({ error: "Email and password required" }, { status: 400 })
+    }
 
-  if (!user || user.role !== "admin") {
-    return NextResponse.json(
-      { success: false, error: "Admin not found" },
-      { status: 401 }
-    );
+    const user = await User.findOne({ email }).exec()
+
+    if (!user) {
+      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 })
+    }
+
+    const valid = await bcrypt.compare(password, user.password)
+    if (!valid) {
+      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 })
+    }
+
+    const token = jwt.sign(
+      { userId: user._id.toString(), email: user.email, role: user.role },
+      process.env.JWT_SECRET || "your_jwt_secret",
+      { expiresIn: "1d" }
+    )
+
+    return NextResponse.json({ token, role: user.role, email: user.email })
+  } catch (error) {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
-
-  // If passwords are hashed in DB
-  let isMatch = false;
-  if (user.password.startsWith("$2")) {
-    // bcrypt hash starts with $2...
-    isMatch = await bcrypt.compare(password, user.password);
-  } else {
-    // plain text fallback
-    isMatch = password === user.password;
-  }
-
-  if (!isMatch) {
-    return NextResponse.json(
-      { success: false, error: "Invalid password" },
-      { status: 401 }
-    );
-  }
-
-  return NextResponse.json({
-    success: true,
-    user: { email: user.email, role: user.role },
-  });
 }
 
-export async function GET() {
-  return NextResponse.json({ message: "Admin login API is working" });
+export function GET() {
+  return NextResponse.json({ message: "Method GET not allowed" }, { status: 405 })
 }

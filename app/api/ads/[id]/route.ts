@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server"
-import { dbConnect } from "@/lib/mongodb"
+import dbConnect from "@/lib/mongodb"
 import Ad from "@/models/Ad"
 
 // UPDATE ad by ID
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   await dbConnect()
   const body = await req.json()
-
   try {
     const ad = await Ad.findByIdAndUpdate(params.id, body, { new: true }).lean()
     if (!ad) return NextResponse.json({ error: "Ad not found" }, { status: 404 })
