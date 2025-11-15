@@ -6,27 +6,31 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Navigation } from "@/components/navigation"
-import { MapPin, Star, RotateCw } from "lucide-react" 
+import { MapPin, Star, RotateCw } from "lucide-react"
 import { useEffect, useState } from "react"
 
-export default function HomePage() {
-  
-  interface VideoAd {
-    id: number;
-    videoUrl: string;
-    linkUrl: string;
-    title: string;
-  }
-  
-  interface Article {
-    id: number;
-    title: string;
-    image: string;
-    excerpt: string;
-    fullText: string;
-    readTime: string;
-  }
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL
 
+interface VideoAd {
+  id: number
+  videoUrl: string
+  linkUrl: string
+  title: string
+}
+
+interface Article {
+  id: number
+  title: string
+  image: string
+  excerpt: string
+  fullText: string
+  readTime: string
+}
+
+export default function HomePage() {
   const [products, setProducts] = useState<any[]>([])
   const [programs, setPrograms] = useState<any[]>([])
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
@@ -39,7 +43,7 @@ export default function HomePage() {
     const fetchAds = async () => {
       try {
         setAdsLoading(true)
-        const res = await fetch("/api/ads")
+        const res = await fetch(`${API_BASE_URL}/ads`)
         if (!res.ok) throw new Error("Failed to fetch ads")
         const data = await res.json()
         if (Array.isArray(data.ads) && data.ads.length > 0) {
@@ -62,19 +66,26 @@ export default function HomePage() {
   useEffect(() => {
     if (videoAds.length > 0) {
       const rotationInterval = setInterval(() => {
-        setCurrentAdIndex(prev => (prev + 1) % videoAds.length)
+        setCurrentAdIndex((prev) => (prev + 1) % videoAds.length)
       }, 5000)
       return () => clearInterval(rotationInterval)
     }
   }, [videoAds.length])
 
   useEffect(() => {
-    fetch("/api/products")
-      .then(res => res.json())
+    fetch(`${API_BASE_URL}/products`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch products")
+        return res.json()
+      })
       .then(setProducts)
       .catch(() => setProducts([]))
-    fetch("/api/programs")
-      .then(res => res.json())
+
+    fetch(`${API_BASE_URL}/programs`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch programs")
+        return res.json()
+      })
       .then(setPrograms)
       .catch(() => setPrograms([]))
   }, [])
@@ -110,7 +121,7 @@ Cycling in Huye is not just about movement,it’s about immersion. Along the way
       excerpt: "Discover the ritual and meaning behind ikigage, Rwanda's traditional sorghum brew.",
       fullText: `In the heart of Rwanda’s cultural heritage lies ikigage, a traditional sorghum based brew that embodies community, celebration, and ancestral wisdom. More than just a beverage, ikigage represents a ritual of connection between people, generations, and the land itself. Its preparation and consumption are deeply woven into the social fabric of Rwandan life, making it a powerful symbol of identity and unity. Ikigage is typically brewed using sorghum flour (uburo), water, and occasionally honey. The process begins with fermentation in clay pots, where the mixture bubbles and froths, signaling life and readiness. Wooden sticks are used to stir the brew, and the entire setup reflects a rustic, time honored method passed down through generations. The clay pot itself is not just a vessel ,it’s a cultural artifact that preserves temperature, flavor, and tradition. This drink plays a central role in communal gatherings, including weddings, naming ceremonies, harvest celebrations, and rites of passage. It is served with pride and shared among guests as a gesture of hospitality and respect. Brewing ikigage is often accompanied by storytelling, songs, and blessings, turning the act into a communal experience that reinforces social bonds and preserves oral history. For travelers and cultural enthusiasts, engaging with ikigage offers a unique window into Rwandan life. Through community-based tourism initiatives like those offered by Gihomarts, visitors can participate in brewing sessions, learn the symbolism behind each step, and hear firsthand stories from elders who carry the tradition forward. These experiences go beyond observation ,they invite immersion, understanding, and appreciation. In a rapidly modernizing world, traditions like ikigage remind us of the value of heritage and the importance of preserving cultural practices. They offer continuity, identity, and a sense of belonging. For Rwanda, ikigage is not just a drink,it is a living tradition that continues to nourish both body and spirit.`,
       readTime: "8 min read",
-    }, 
+    },
     {
       id: 3,
       title: "Community Tourism Impact",
@@ -233,7 +244,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               </p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {products.map(product => (
+              {products.map((product) => (
                 <Card key={product._id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="relative h-48">
                     {product.image && <Image src={product.image} alt={product.name} fill className="object-cover" />}
@@ -262,7 +273,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               </p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {programs.map(program => (
+              {programs.map((program) => (
                 <Card key={program._id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <CardTitle className="text-xl">{program.name}</CardTitle>
@@ -288,7 +299,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {popularTrips.map(trip => (
+            {popularTrips.map((trip) => (
               <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative h-48">
                   <Image src={trip.image || "/npm.jpg"} alt={trip.name} fill className="object-cover" />
@@ -331,7 +342,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
             and farmers with a growing community of conscious consumers. We aspire to be a catalyst for inclusive economic growth,where even the smallest entrepreneur has a platform to thrive. Our goal is to empower underserved communities with technology-driven tools that amplify their voices, increase visibility, and foster sustainability. We envision a Rwanda where commerce is no longer limited by geography or infrastructure, but rather fueled by innovation, resilience, and community spirit. Through partnerships, mobile-first solutions, and user-centered design, we strive to build more than just a marketplace.we are building a movement where culture meets commerce, and tradition merges with technology to shape a brighter, more connected future for all.
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {travelArticles.map(article => (
+            {travelArticles.map((article) => (
               <Card key={article.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative h-48">
                   <Image src={article.image || "/miss.jpg"} alt={article.title} fill className="object-cover" />
@@ -362,7 +373,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               >
                 <div
                   className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative border border-orange-200"
-                  onClick={e => e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <button
                     className="absolute top-4 right-4 text-gray-400 hover:text-orange-600 text-2xl font-bold focus:outline-none"
@@ -418,7 +429,7 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               { img: "iprc-kitabi.png", name: "IPRC Kitabi", url: "https://www.iprckitabi.rp.ac.rw/" },
               { img: "university-of-rwanda.png", name: "University of Rwanda", url: "https://www.ur.ac.rw/" }
             ].map((partner, i) => (
-              <Link key={i} href={partner.url} target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-white rounded shadow p-4 md:p-8" style={{minWidth:180, minHeight:90}}>
+              <Link key={i} href={partner.url} target="_blank" rel="noopener noreferrer" className="flex justify-center items-center bg-white rounded shadow p-4 md:p-8" style={{ minWidth: 180, minHeight: 90 }}>
                 <Image
                   src={`/images/${partner.img}`}
                   alt={partner.name}
