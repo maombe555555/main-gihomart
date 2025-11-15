@@ -11,7 +11,7 @@ export default function LoginPage() {
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault()  
     setError("")
     setLoading(true)
 
