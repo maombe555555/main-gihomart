@@ -1,4 +1,4 @@
-import { dbConnect} from "@/lib/mongodb"
+import dbConnect from "@/lib/mongodb"
 import User from "@/models/User"
 import { NextResponse } from "next/server"
 

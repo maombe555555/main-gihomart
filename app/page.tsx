@@ -38,6 +38,12 @@ export default function HomePage() {
   const [currentAdIndex, setCurrentAdIndex] = useState(0)
   const [adsLoading, setAdsLoading] = useState(true)
   const [adsError, setAdsError] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  // Set client-side flag to prevent hydration mismatches
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -107,11 +113,11 @@ export default function HomePage() {
       title: "Cycling Through Huye's Hills",
       image: "/images/hq720.jpg?height=200&width=300",
       excerpt: "Discover the beauty of Rwanda's landscape on two wheels",
-      fullText: `Huye, Rwanda’s cultural and academic capital, offers more than intellectual depth, it’s a landscape of rolling hills, quiet trails, and scenic routes that invite cyclists into a journey of discovery. Whether you’re a student seeking weekend refreshment or a traveler exploring Rwanda’s southern charm, cycling through Huye’s hills is a soulful experience that blends nature, culture, and community.
+      fullText: `Huye, Rwanda's cultural and academic capital, offers more than intellectual depth, it's a landscape of rolling hills, quiet trails, and scenic routes that invite cyclists into a journey of discovery. Whether you're a student seeking weekend refreshment or a traveler exploring Rwanda's southern charm, cycling through Huye's hills is a soulful experience that blends nature, culture, and community.
 
-The terrain around Huye is ideal for moderate cycling. Gentle slopes wind past banana plantations, eucalyptus groves, and red-soil paths that connect villages and farms. Riders can start from the University of Rwanda’s Huye Campus and venture toward Ruhande Arboretum, a peaceful forest with shaded trails and rare plant species. From there, routes extend toward Tumba, Ngoma, and Gishamvu, offering panoramic views of valleys and traditional homesteads.
+The terrain around Huye is ideal for moderate cycling. Gentle slopes wind past banana plantations, eucalyptus groves, and red-soil paths that connect villages and farms. Riders can start from the University of Rwanda's Huye Campus and venture toward Ruhande Arboretum, a peaceful forest with shaded trails and rare plant species. From there, routes extend toward Tumba, Ngoma, and Gishamvu, offering panoramic views of valleys and traditional homesteads.
 
-Cycling in Huye is not just about movement,it’s about immersion. Along the way, riders encounter local artisans weaving baskets, farmers tending fields, and children waving from roadside paths. These moments foster connection and reflect the warmth of Rwandan hospitality. For those interested in cultural stops, the National Ethnographic Museum provides a perfect midpoint for rest and reflection, with exhibits that deepen appreciation for Rwanda’s heritage.`,
+Cycling in Huye is not just about movement,it's about immersion. Along the way, riders encounter local artisans weaving baskets, farmers tending fields, and children waving from roadside paths. These moments foster connection and reflect the warmth of Rwandan hospitality. For those interested in cultural stops, the National Ethnographic Museum provides a perfect midpoint for rest and reflection, with exhibits that deepen appreciation for Rwanda's heritage.`,
       readTime: "5 min read",
     },
     {
@@ -119,7 +125,7 @@ Cycling in Huye is not just about movement,it’s about immersion. Along the way
       title: "Traditional Rwandan Culture",
       image: "/images/inzo.jpg?height=200&width=300",
       excerpt: "Discover the ritual and meaning behind ikigage, Rwanda's traditional sorghum brew.",
-      fullText: `In the heart of Rwanda’s cultural heritage lies ikigage, a traditional sorghum based brew that embodies community, celebration, and ancestral wisdom. More than just a beverage, ikigage represents a ritual of connection between people, generations, and the land itself. Its preparation and consumption are deeply woven into the social fabric of Rwandan life, making it a powerful symbol of identity and unity. Ikigage is typically brewed using sorghum flour (uburo), water, and occasionally honey. The process begins with fermentation in clay pots, where the mixture bubbles and froths, signaling life and readiness. Wooden sticks are used to stir the brew, and the entire setup reflects a rustic, time honored method passed down through generations. The clay pot itself is not just a vessel ,it’s a cultural artifact that preserves temperature, flavor, and tradition. This drink plays a central role in communal gatherings, including weddings, naming ceremonies, harvest celebrations, and rites of passage. It is served with pride and shared among guests as a gesture of hospitality and respect. Brewing ikigage is often accompanied by storytelling, songs, and blessings, turning the act into a communal experience that reinforces social bonds and preserves oral history. For travelers and cultural enthusiasts, engaging with ikigage offers a unique window into Rwandan life. Through community-based tourism initiatives like those offered by Gihomarts, visitors can participate in brewing sessions, learn the symbolism behind each step, and hear firsthand stories from elders who carry the tradition forward. These experiences go beyond observation ,they invite immersion, understanding, and appreciation. In a rapidly modernizing world, traditions like ikigage remind us of the value of heritage and the importance of preserving cultural practices. They offer continuity, identity, and a sense of belonging. For Rwanda, ikigage is not just a drink,it is a living tradition that continues to nourish both body and spirit.`,
+      fullText: `In the heart of Rwanda's cultural heritage lies ikigage, a traditional sorghum based brew that embodies community, celebration, and ancestral wisdom. More than just a beverage, ikigage represents a ritual of connection between people, generations, and the land itself. Its preparation and consumption are deeply woven into the social fabric of Rwandan life, making it a powerful symbol of identity and unity. Ikigage is typically brewed using sorghum flour (uburo), water, and occasionally honey. The process begins with fermentation in clay pots, where the mixture bubbles and froths, signaling life and readiness. Wooden sticks are used to stir the brew, and the entire setup reflects a rustic, time honored method passed down through generations. The clay pot itself is not just a vessel ,it's a cultural artifact that preserves temperature, flavor, and tradition. This drink plays a central role in communal gatherings, including weddings, naming ceremonies, harvest celebrations, and rites of passage. It is served with pride and shared among guests as a gesture of hospitality and respect. Brewing ikigage is often accompanied by storytelling, songs, and blessings, turning the act into a communal experience that reinforces social bonds and preserves oral history. For travelers and cultural enthusiasts, engaging with ikigage offers a unique window into Rwandan life. Through community-based tourism initiatives like those offered by Gihomarts, visitors can participate in brewing sessions, learn the symbolism behind each step, and hear firsthand stories from elders who carry the tradition forward. These experiences go beyond observation ,they invite immersion, understanding, and appreciation. In a rapidly modernizing world, traditions like ikigage remind us of the value of heritage and the importance of preserving cultural practices. They offer continuity, identity, and a sense of belonging. For Rwanda, ikigage is not just a drink,it is a living tradition that continues to nourish both body and spirit.`,
       readTime: "8 min read",
     },
     {
@@ -127,12 +133,12 @@ Cycling in Huye is not just about movement,it’s about immersion. Along the way
       title: "Community Tourism Impact",
       image: "/images/today.jpg?height=200&width=300",
       excerpt: "How tourism supports local communities in Rwanda",
-      fullText: `Nestled in the southern province of Rwanda, Huye formerly known as Butare is widely regarded as the country’s cultural and intellectual capital. With its rich history, vibrant academic life, and deep-rooted traditions, Huye offers visitors a unique window into Rwanda’s soul.
-One of Huye’s most iconic landmarks is the National Ethnographic Museum, home to the largest collection of cultural artifacts in Rwanda. From traditional tools and musical instruments to ceremonial clothing and ancient crafts, the museum provides a comprehensive journey through Rwanda’s pre-colonial, colonial, and post-independence eras. Visitors can explore full-scale dioramas, listen to guided stories, and witness live performances of traditional dance and drumming.
+      fullText: `Nestled in the southern province of Rwanda, Huye formerly known as Butare is widely regarded as the country's cultural and intellectual capital. With its rich history, vibrant academic life, and deep-rooted traditions, Huye offers visitors a unique window into Rwanda's soul.
+One of Huye's most iconic landmarks is the National Ethnographic Museum, home to the largest collection of cultural artifacts in Rwanda. From traditional tools and musical instruments to ceremonial clothing and ancient crafts, the museum provides a comprehensive journey through Rwanda's pre-colonial, colonial, and post-independence eras. Visitors can explore full-scale dioramas, listen to guided stories, and witness live performances of traditional dance and drumming.
 
-Beyond the museum, Huye’s charm lies in its community life and architecture. The city’s colonial-era buildings, red-brick Catholic cathedral, and leafy boulevards reflect a blend of historical depth and modern development. Thanks to urban renewal projects, Huye now boasts clean, green spaces and improved infrastructure, making it both welcoming and walkable.
+Beyond the museum, Huye's charm lies in its community life and architecture. The city's colonial-era buildings, red-brick Catholic cathedral, and leafy boulevards reflect a blend of historical depth and modern development. Thanks to urban renewal projects, Huye now boasts clean, green spaces and improved infrastructure, making it both welcoming and walkable.
 
-Huye is also home to the University of Rwanda’s Huye Campus, formerly the National University of Rwanda. This academic hub has earned the city a reputation as Rwanda’s intellectual center. The surrounding Arboretum of Ruhande, established in 1933, offers a tranquil escape and a chance to explore indigenous and exotic plant species.
+Huye is also home to the University of Rwanda's Huye Campus, formerly the National University of Rwanda. This academic hub has earned the city a reputation as Rwanda's intellectual center. The surrounding Arboretum of Ruhande, established in 1933, offers a tranquil escape and a chance to explore indigenous and exotic plant species.
 
 For those seeking authentic cultural experiences, Huye provides access to community-based tourism. Visitors can engage with local artisans, participate in traditional cooking and brewing (such as ikigage), and join guided tours to nearby villages. These interactions foster mutual understanding and support local livelihoods.`,
       readTime: "6 min read",
@@ -141,6 +147,18 @@ For those seeking authentic cultural experiences, Huye provides access to commun
 
   const openArticleModal = (article: Article) => setSelectedArticle(article)
   const closeArticleModal = () => setSelectedArticle(null)
+
+  // Don't render anything until client-side to prevent hydration mismatch
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background relative">
