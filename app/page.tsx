@@ -48,35 +48,45 @@ export default function HomePage() {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        setAdsLoading(true)
-        const res = await fetch(`${API_BASE_URL}/ads`)
-        if (!res.ok) throw new Error("Failed to fetch ads")
-        const data = await res.json()
-        if (Array.isArray(data.ads) && data.ads.length > 0) {
-          setVideoAds(data.ads)
-          setAdsError(false)
-        } else {
-          setVideoAds([])
-          setAdsError(true)
+        setAdsLoading(true);
+        
+        // ✅ Use relative path to your Next.js API route
+        // This avoids CORS issues since it's same origin
+        const apiUrl = '/api/ads';
+        console.log('🔍 Fetching from local API:', apiUrl);
+        
+        const res = await fetch(apiUrl);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errorText}`);
         }
-      } catch {
-        setVideoAds([])
-        setAdsError(true)
+        
+        const data = await res.json();
+        console.log('✅ API Response:', data);
+        
+        if (data.success && Array.isArray(data.ads) && data.ads.length > 0) {
+          // Only keep ads with required fields
+          const validAds = data.ads.filter((ad: VideoAd) => ad.videoUrl && ad.linkUrl);
+          setVideoAds(validAds);
+          setAdsError(validAds.length === 0);
+          console.log(`✅ Loaded ${validAds.length} valid ads`);
+        } else {
+          console.warn('⚠️ No ads found in response');
+          setVideoAds([]);
+          setAdsError(true);
+        }
+      } catch (error) {
+        console.error('❌ Fetch error:', error);
+        setVideoAds([]);
+        setAdsError(true);
       } finally {
-        setAdsLoading(false)
+        setAdsLoading(false);
       }
-    }
-    fetchAds()
-  }, [])
-
-  useEffect(() => {
-    if (videoAds.length > 0) {
-      const rotationInterval = setInterval(() => {
-        setCurrentAdIndex((prev) => (prev + 1) % videoAds.length)
-      }, 5000)
-      return () => clearInterval(rotationInterval)
-    }
-  }, [videoAds.length])
+    };
+    
+    fetchAds();
+  }, []);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/products`)
@@ -188,23 +198,38 @@ For those seeking authentic cultural experiences, Huye provides access to commun
           <span className="text-red-500 text-sm text-center px-2">Failed to load ads</span>
         ) : currentAd ? (
           <>
-            <Link
-              href={currentAd.linkUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={currentAd.title}
-              className="block w-full h-64 rounded-tl-lg rounded-bl-lg overflow-hidden"
-            >
-              <iframe
-                src={currentAd.videoUrl}
-                title={currentAd.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </Link>
+            {/* Fixed: Check if linkUrl exists before using Link */}
+            {currentAd.linkUrl ? (
+              <Link
+                href={currentAd.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={currentAd.title}
+                className="block w-full h-64 rounded-tl-lg rounded-bl-lg overflow-hidden"
+              >
+                <iframe
+                  src={currentAd.videoUrl}
+                  title={currentAd.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </Link>
+            ) : (
+              <div className="block w-full h-64 rounded-tl-lg rounded-bl-lg overflow-hidden">
+                <iframe
+                  src={currentAd.videoUrl}
+                  title={currentAd.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            )}
             {videoAds.length > 1 && (
               <>
                 <Button
