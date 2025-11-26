@@ -11,7 +11,6 @@ const BookingSchema = new mongoose.Schema({
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   phone: { type: String, required: true, trim: true },
-  // destination removed
   residence: { type: String, trim: true },
   departureDate: { type: Date },
   returnDate: { type: Date },
@@ -19,9 +18,13 @@ const BookingSchema = new mongoose.Schema({
   budget: { type: String, trim: true },
   comments: { type: String, trim: true },
   products: { type: Array, default: [] },
+  status: { 
+    type: String, 
+    enum: ['pending', 'approved', 'waiting', 'rejected'],
+    default: 'pending' 
+  },
+  statusUpdatedAt: { type: Date },
   createdAt: { type: Date, default: Date.now },
 })
 
 export default mongoose.models.Booking || mongoose.model("Booking", BookingSchema)
-
-

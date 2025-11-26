@@ -14,9 +14,10 @@ import {
   Settings, 
   BarChart3,
   Plus,
-  Eye
+  Eye,
+  BookOpen,
+  Mail
 } from "lucide-react"
-import { title } from "process"
 
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -26,15 +27,17 @@ export default function AdminDashboard() {
     docs: number | null,
     products: number | null,
     programs: number | null,
-    ads: number | null, // Added ads property
-    contact: number | null, // Added contact property
+    ads: number | null,
+    contact: number | null,
+    bookings: number | null, // Added bookings property
   }>({
     users: null,
     docs: null,
     products: null,
     programs: null,
-    ads: null, // Initialize ads
-    contact: null, // Initialize contact
+    ads: null,
+    contact: null,
+    bookings: null, // Initialize bookings
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -58,23 +61,28 @@ export default function AdminDashboard() {
       setLoading(true)
       setError("")
       try {
-        const [usersRes, docsRes, productsRes, programsRes, adsRes, contactRes] = await Promise.all([
+        const [usersRes, docsRes, productsRes, programsRes, adsRes, contactRes, bookingsRes] = await Promise.all([
           fetch("/api/users"),
-          fetch("/api/contact"), // Fetch contact data
+          fetch("/api/docs"),
           fetch("/api/products"),
           fetch("/api/programs"),
           fetch("/api/ads"),
-          fetch("/api/contact"), // Fetch contact data
+          fetch("/api/contact"),
+          fetch("/api/booking") // Fetch bookings data
         ])
-        if (!usersRes.ok || !docsRes.ok || !productsRes.ok || !programsRes.ok || !adsRes.ok || !contactRes.ok) {
+        
+        if (!usersRes.ok || !docsRes.ok || !productsRes.ok || !programsRes.ok || !adsRes.ok || !contactRes.ok || !bookingsRes.ok) {
           throw new Error("Failed to fetch one or more resources.")
         }
-        const users = await usersRes.json(); // Extract users data
-        const docs = await docsRes.json(); // Extract docs data
-        const products = await productsRes.json(); // Extract products data
-        const programs = await programsRes.json(); // Extract programs data
-        const ads = await adsRes.json(); // Extract ads data
-        const contact = await contactRes.json(); // Extract contact data
+        
+        const users = await usersRes.json();
+        const docs = await docsRes.json();
+        const products = await productsRes.json();
+        const programs = await programsRes.json();
+        const ads = await adsRes.json();
+        const contact = await contactRes.json();
+        const bookings = await bookingsRes.json();
+        
         setStats({
           users: Array.isArray(users) ? users.length : 0,
           docs: Array.isArray(docs) ? docs.length : 0,
@@ -82,6 +90,7 @@ export default function AdminDashboard() {
           programs: Array.isArray(programs) ? programs.length : 0,
           ads: Array.isArray(ads) ? ads.length : 0,
           contact: Array.isArray(contact) ? contact.length : 0,
+          bookings: Array.isArray(bookings) ? bookings.length : (bookings.data && Array.isArray(bookings.data) ? bookings.data.length : 0),
         })
       } catch (err) {
         setError("Failed to load statistics.")
@@ -132,6 +141,20 @@ export default function AdminDashboard() {
       color: "text-orange-600",
       bgColor: "bg-orange-50",
     },
+    {
+      title: "Bookings",
+      value: stats.bookings !== null ? stats.bookings : "-",
+      icon: BookOpen,
+      color: "text-red-600",
+      bgColor: "bg-red-50",
+    },
+    {
+      title: "Contact Messages",
+      value: stats.contact !== null ? stats.contact : "-",
+      icon: Mail,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50",
+    },
   ]
 
   const quickActions = [
@@ -160,7 +183,7 @@ export default function AdminDashboard() {
       bgColor: "bg-purple-50"
     },
     {
-    title: "Manage Advertisements",
+      title: "Manage Advertisements",
       description: "Create and edit ads",
       icon: Settings,
       href: "/admin/ads",
@@ -168,13 +191,21 @@ export default function AdminDashboard() {
       bgColor: "bg-orange-50"
     },
     {
-    title: "contact management",
+      title: "Contact Management",
       description: "View and respond to contact inquiries",
-      icon: Settings,
+      icon: Mail,
       href: "/admin/contact",
       color: "text-red-600",
       bgColor: "bg-red-50"
     },
+    {
+      title: "Booking Management",
+      description: "Manage and approve booking requests",
+      icon: BookOpen,
+      href: "/admin/bookings",
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50"
+    }
   ]
 
   return (
@@ -211,13 +242,15 @@ export default function AdminDashboard() {
       {/* Spacer for fixed nav */}
       <div className="h-16" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Stats Grid */}
         <div className="mb-4">
           {loading && <div className="text-center text-gray-500">Loading statistics...</div>}
           {error && <div className="text-center text-red-600">{error}</div>}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        
+        {/* Stats Grid - Updated to 3 columns for better layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {statsConfig.map((stat, index) => (
             <Card key={index} className="hover:shadow-md transition-shadow">
               <CardContent className="p-6">
@@ -234,10 +267,11 @@ export default function AdminDashboard() {
             </Card>
           ))}
         </div>
+        
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {quickActions.map((action, index) => (
               <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer">
                 <Link href={action.href}>
@@ -257,6 +291,7 @@ export default function AdminDashboard() {
             ))}
           </div>
         </div>
+        
         {/* Navigation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="hover:shadow-md transition-shadow">
@@ -276,6 +311,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Link>
           </Card>
+          
           <Card className="hover:shadow-md transition-shadow">
             <Link href="/admin/products">
               <CardHeader>
@@ -293,6 +329,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Link>
           </Card>
+          
           <Card className="hover:shadow-md transition-shadow">
             <Link href="/admin/programs">
               <CardHeader>
@@ -310,6 +347,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Link>
           </Card>
+          
           <Card className="hover:shadow-md transition-shadow">
             <Link href="/admin/users">
               <CardHeader>
@@ -327,8 +365,80 @@ export default function AdminDashboard() {
               </CardContent>
             </Link>
           </Card>
+          
+          <Card className="hover:shadow-md transition-shadow">
+            <Link href="/admin/contact">
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <Mail className="w-5 h-5 text-red-600" />
+                  <CardTitle className="text-lg">Contact</CardTitle>
+                </div>
+                <CardDescription>Manage contact inquiries and messages</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Messages
+                </Button>
+              </CardContent>
+            </Link>
+          </Card>
+          
+          <Card className="hover:shadow-md transition-shadow">
+            <Link href="/admin/ads">
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <Settings className="w-5 h-5 text-indigo-600" />
+                  <CardTitle className="text-lg">Advertisements</CardTitle>
+                </div>
+                <CardDescription>Manage ads and promotions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Ads
+                </Button>
+              </CardContent>
+            </Link>
+          </Card>
+          
+          <Card className="hover:shadow-md transition-shadow">
+            <Link href="/admin/bookings">
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <BookOpen className="w-5 h-5 text-indigo-600" />
+                  <CardTitle className="text-lg">Bookings</CardTitle>
+                </div>
+                <CardDescription>Manage and approve booking requests</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Bookings
+                </Button>
+              </CardContent>
+            </Link>
+          </Card>
+          
+          <Card className="hover:shadow-md transition-shadow">
+            <Link href="/admin/analytics">
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                  <CardTitle className="text-lg">Analytics</CardTitle>
+                </div>
+                <CardDescription>View website statistics and insights</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Analytics
+                </Button>
+              </CardContent>
+            </Link>
+          </Card>
         </div>
       </div>
     </div>
   )
-} 
+}

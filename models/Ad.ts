@@ -4,6 +4,7 @@ export interface AdType {
   _id: string
   title: string
   videoUrl: string
+  linkUrl?: string
   isActive: boolean
   placement: "home" | "other"
   createdAt?: Date
@@ -12,6 +13,7 @@ export interface AdType {
 const AdSchema = new Schema<AdType>({
   title: { type: String, required: true },
   videoUrl: { type: String, required: true },
+  linkUrl: { type: String, default: "#" },
   isActive: { type: Boolean, default: true },
   placement: { type: String, enum: ["home", "other"], default: "home" },
   createdAt: { type: Date, default: Date.now },
