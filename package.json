@@ -8,14 +8,14 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev -p 3001",
-    "dev:clean": "rm -rf .next && next dev -p 3001",
+    "dev:clean": "rimraf .next && next dev -p 3001",
     "dev:kill": "npx kill-port 3001 && next dev -p 3001",
     "dev:alt": "next dev -p 3002",
-    "dev:force": "taskkill /f /im node.exe 2>nul || true && rm -rf .next && next dev -p 3001",
+    "dev:force": "taskkill /f /im node.exe 2>nul || true && rimraf .next && next dev -p 3001",
     "lint": "next lint",
     "start": "next start",
-    "clean": "rm -rf .next node_modules/.cache",
-    "clean:install": "rm -rf node_modules package-lock.json && npm install",
+    "clean": "rimraf .next node_modules/.cache",
+    "clean:install": "rimraf node_modules package-lock.json && npm install",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -55,14 +55,15 @@
     "date-fns": "^3.6.0",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
+    "jsonwebtoken": "^9.0.0",
     "lucide-react": "^0.454.0",
     "mongoose": "^8.16.5",
     "next": "^16.0.3",
     "next-themes": "^0.4.4",
     "nodemailer": "^6.9.13",
-    "react": "^19.2.0",
+    "react": "^18.2.0",
     "react-day-picker": "^9.11.0",
-    "react-dom": "^19.2.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
@@ -76,12 +77,14 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19",
+    "@types/react": "^18.0.38",
+    "@types/react-dom": "^18.0.11",
     "@types/uuid": "^9.0.2",
     "kill-port": "^2.0.1",
     "postcss": "^8.5",
+    "rimraf": "^5.0.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"
   }
+  
 }
