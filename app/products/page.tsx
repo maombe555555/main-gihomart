@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Description } from "@radix-ui/react-toast"
 import { imageOptimizer } from "next/dist/server/image-optimizer"
+import AdUnit from "@/components/AdUnit"
 
 export default function ProductsPage() {
   const coreServices = [
@@ -155,6 +156,11 @@ export default function ProductsPage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+        <div className="mt-16 flex justify-center">
+          <div className="w-full max-w-2xl">
+            <AdUnit adSlot="products-page-ad-slot" adFormat="horizontal" />
+          </div>
         </div>
         {/* If no products and no core services (should never happen), show fallback */}
         {/* Removed 'No services found.' message */}

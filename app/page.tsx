@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Navigation } from "@/components/navigation"
 import { MapPin, Star, RotateCw } from "lucide-react"
 import { useEffect, useState } from "react"
+import AdUnit from "@/components/AdUnit"
 
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
@@ -303,6 +304,11 @@ For those seeking authentic cultural experiences, Huye provides access to commun
               ))}
             </div>
           </div>
+          <div className="mt-12 flex justify-center">
+            <div className="w-full max-w-2xl">
+              <AdUnit adSlot="services-ad-slot" adFormat="horizontal" />
+            </div>
+          </div>
         </section>
       )}
 
@@ -327,6 +333,11 @@ For those seeking authentic cultural experiences, Huye provides access to commun
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          </div>
+          <div className="mt-12 flex justify-center">
+            <div className="w-full max-w-2xl">
+              <AdUnit adSlot="programs-ad-slot" adFormat="horizontal" />
             </div>
           </div>
         </section>

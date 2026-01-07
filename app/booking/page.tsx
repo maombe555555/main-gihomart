@@ -10,6 +10,7 @@ import { Label } from "../../components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
 import { Textarea } from "../../components/ui/textarea"
 import { Phone, Mail } from "lucide-react"
+import AdUnit from "@/components/AdUnit"
 
 export default function BookingPage() {
   const [departureDate, setDepartureDate] = useState<Date>()
@@ -397,6 +398,13 @@ export default function BookingPage() {
           </Card>
         </aside>
       </main>
+
+      {/* AdSense Ad Unit */}
+      <div className="mt-16 flex justify-center">
+        <div className="w-full max-w-2xl">
+          <AdUnit adSlot="booking-page-ad-slot" adFormat="horizontal" />
+        </div>
+      </div>
 
       {/* Product Modal */}
       {viewProduct && (

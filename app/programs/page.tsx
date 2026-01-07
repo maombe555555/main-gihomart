@@ -8,6 +8,7 @@ import { CardTitle } from "@/components/ui/card";
 import { Navigation } from "@/components/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import AdUnit from "@/components/AdUnit";
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState([]);
   useEffect(() => {
@@ -125,6 +126,11 @@ export default function ProgramsPage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+        <div className="mt-16 flex justify-center">
+          <div className="w-full max-w-2xl">
+            <AdUnit adSlot="programs-page-ad-slot" adFormat="horizontal" />
+          </div>
         </div>
       </div>
     </div>
